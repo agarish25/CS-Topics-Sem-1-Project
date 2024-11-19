@@ -11,7 +11,6 @@
    A - left
    S - downKK
    D - right
-   yup
 */
 
 // imports to display the game and for the logic
