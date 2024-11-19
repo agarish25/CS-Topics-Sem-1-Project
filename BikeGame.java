@@ -1,8 +1,8 @@
 /*
    Owen Wengreen
-   6/9/2024
+   11/10/2024
    
-   BikeGame is a game insired from the snake game. The goal of the game
+   BikeGame is a game inspired from the snake game. The goal of the game
    is to collect as many ducks as possible without running over your ducks
    or running into a wall!
    
@@ -11,6 +11,7 @@
    A - left
    S - downKK
    D - right
+   yup
 */
 
 // imports to display the game and for the logic
