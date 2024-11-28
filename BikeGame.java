@@ -9,7 +9,7 @@
    Controls:
    W - up
    A - left
-   S - downKK
+   S - down
    D - right
 */
 
