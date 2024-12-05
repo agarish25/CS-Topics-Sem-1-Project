@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.teavm:teavm-core:0.8.0'
+}
+
+task compileTeaVM(type: JavaExec) {
+    main = 'org.teavm.tooling.TeaVMTool'
+    classpath = sourceSets.main.runtimeClasspath
+    args = [
+        '--main-class', 'GameEntryPoint', // Replace with your main class
+        '--target-directory', "$buildDir/teavm",
+        '--target-file', 'teavm-output.js',
+        '--target-type', 'javascript'
+    ]
+}
+
+compileJava.finalizedBy(compileTeaVM)
