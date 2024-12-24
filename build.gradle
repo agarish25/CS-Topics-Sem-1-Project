@@ -1,24 +1,32 @@
 plugins {
-    id 'java'
+    id "java"
+    id "war"
+    id "org.teavm" version "0.11.0"
 }
-
 repositories {
     mavenCentral()
 }
 
+// This is optional, but for real-world applications you need to interact with browser.
+// This dependency provides useful wrappers.
 dependencies {
-    implementation 'org.teavm:teavm-core:0.8.0'
+    implementation teavm.libs.jsoApis
 }
 
-task compileTeaVM(type: JavaExec) {
-    main = 'org.teavm.tooling.TeaVMTool'
-    classpath = sourceSets.main.runtimeClasspath
-    args = [
-        '--main-class', 'GameEntryPoint', // Replace with your main class
-        '--target-directory', "$buildDir/teavm",
-        '--target-file', 'teavm-output.js',
-        '--target-type', 'javascript'
-    ]
-}
+teavm {
+    all {
+        mainClass = "BikeGame.MainClass"
+    }
+    js {
+        addedToWebApp = true
 
-compileJava.finalizedBy(compileTeaVM)
+        // this is also optional, default value is <project name>.js
+        targetFileName = "BikeGame.js"
+    }
+    wasmGC {
+        addedToWebApp = true
+
+        // this is also optional, default value is <project name>.wasm
+        targetFileName = "example.wasm"
+    }
+}
