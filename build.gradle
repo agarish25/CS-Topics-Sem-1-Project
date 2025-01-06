@@ -13,9 +13,13 @@ dependencies {
     implementation teavm.libs.jsoApis
 }
 
+application {
+    mainClass = "BikeGame.BikeGame" // Fully qualified class name
+}
+
 teavm {
     all {
-        mainClass = "BikeGame.MainClass"
+        mainClass = "BikeGame.BikeGame"
     }
     js {
         addedToWebApp = true
