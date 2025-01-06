@@ -13,18 +13,13 @@ dependencies {
     implementation teavm.libs.jsoApis
 }
 
-application {
-    mainClass = "BikeGame.BikeGame" // Fully qualified class name
-}
-
 teavm {
     all {
-        mainClass = "BikeGame.BikeGame"
+        mainClass = "TestBike.MainClass"
     }
     js {
-        addedToWebApp = true
-
-        // this is also optional, default value is <project name>.js
-        targetFileName = "BikeGame.js"
+        addedToWebApp = false // Prevent it from being placed in webapp
+        targetFileName = "TestBike.js" // The name of the generated JS file
+        outputDir = file("$buildDir/generated/teavm/js") // Set the output folder
     }
 }
