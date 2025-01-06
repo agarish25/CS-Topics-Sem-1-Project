@@ -3,19 +3,25 @@ plugins {
     id "war"
     id "org.teavm" version "0.11.0"
 }
-repositories {
-    mavenCentral()
-}
 
 // This is optional, but for real-world applications you need to interact with browser.
 // This dependency provides useful wrappers.
 dependencies {
     implementation teavm.libs.jsoApis
+    implementation files('libs\teavm-jso-apis-0.11.0-dev-3-sources.jar')
+
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://teavm.org/maven/repository"
+    }
 }
 
 teavm {
     all {
-        mainClass = "TestBike.MainClass"
+        mainClass = "BikeGame.TestBike"
     }
     js {
         addedToWebApp = false // Prevent it from being placed in webapp
