@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bike Game with Duck Images</title>
+    <title>Bike Game with Ducks</title>
     <style>
-        /* basic page setup */
         body {
             margin: 0;
             display: flex;
@@ -15,7 +14,6 @@
             background-color: #484848;
         }
 
-        /* game board styles */
         #game-board {
             position: relative;
             width: 480px;
@@ -24,14 +22,12 @@
             border: 2px solid black;
         }
 
-        /* squares for the grid */
         .square {
             position: absolute;
             width: 40px;
             height: 40px;
         }
 
-        /* styles for the score bar */
         #top-bar {
             position: absolute;
             top: 0;
@@ -48,7 +44,6 @@
             border-bottom: 2px solid black;
         }
 
-        /* styles for icons */
         .icon {
             position: absolute;
             width: 35px;
@@ -59,7 +54,7 @@
 </head>
 <body>
     <div id="game-board">
-        <div id="top-bar">Use W A S D to move</div> <!-- instructions bar -->
+        <div id="top-bar">Use W A S D to move</div>
     </div>
 
     <script>
@@ -68,22 +63,16 @@
                 this.gameBoard = document.getElementById("game-board");
                 this.numSquares = 12; // grid size
                 this.squareSize = 40; // size of each square
-                this.topBarHeight = 45; // height of the bar at the top
-                this.duckIconSize = 35; // size of icons
-                this.squares = []; // 2D grid squares
-                this.ducks = []; // stores ducks
-                this.player = { x: 5, y: 5, direction: "up", tail: [] }; // player's position
-                this.currentKey = null; // tracks key presses
-                this.score = 0; // keeps track of the score
-                this.gameInterval = null; // controls game timing
+                this.topBarHeight = 45; // height of the top bar
+                this.duckIconSize = 35; // size of the icons
+                this.squares = []; // grid squares
+                this.ducks = []; // list of ducks on the grid
+                this.player = { x: 5, y: 5, direction: "up", tail: [] }; // player data
+                this.currentKey = null; // last pressed key
+                this.score = 0; // player's score
+                this.gameInterval = null; // game loop interval
 
-                // colors for the grid
-                this.colors = {
-                    darkGreen: "rgb(0, 128, 43)",
-                    lightGreen: "rgb(0, 179, 60)",
-                };
-
-                // loading all images
+                // load all images
                 this.images = {
                     bike: {
                         right: this.loadImage("bikeRight.png"),
@@ -92,19 +81,14 @@
                         down: this.loadImage("bikeDown.png"),
                     },
                     ducks: {
-                        muddy: this.loadImage("duckMuddy.png"),
-                        right: this.loadImage("duckRight.png"),
-                        upRight: this.loadImage("duckUpRight.png"),
                         up: this.loadImage("duckUp.png"),
-                        upLeft: this.loadImage("duckUpLeft.png"),
-                        left: this.loadImage("duckLeft.png"),
-                        downLeft: this.loadImage("duckDownLeft.png"),
+                        right: this.loadImage("duckRight.png"),
                         down: this.loadImage("duckDown.png"),
-                        downRight: this.loadImage("duckDownRight.png"),
+                        left: this.loadImage("duckLeft.png"),
                     },
                 };
 
-                this.init(); // starts everything
+                this.init(); // start the game
             }
 
             loadImage(src) {
@@ -116,12 +100,12 @@
             }
 
             init() {
-                this.createGrid(); // make the game grid
-                this.spawnDuck(); // add a duck
-                this.renderPlayer(); // show the player
-                this.startGameLoop(); // start game logic
+                this.createGrid(); // create the grid
+                this.spawnDuck(); // add the first duck
+                this.renderPlayer(); // display the player
+                this.startGameLoop(); // start the game loop
 
-                document.addEventListener("keydown", (e) => this.handleKeyPress(e)); // key listener
+                document.addEventListener("keydown", (e) => this.handleKeyPress(e)); // listen for key presses
             }
 
             createGrid() {
@@ -134,8 +118,8 @@
                         square.style.top = `${row * this.squareSize + this.topBarHeight}px`;
                         square.style.backgroundColor =
                             (row % 2 === 0 && col % 2 === 0) || (row % 2 === 1 && col % 2 === 1)
-                                ? this.colors.darkGreen
-                                : this.colors.lightGreen; // alternating colors
+                                ? "rgb(0, 128, 43)"
+                                : "rgb(0, 179, 60)";
                         this.gameBoard.appendChild(square);
                         this.squares[row][col] = square;
                     }
@@ -143,14 +127,14 @@
             }
 
             renderPlayer() {
-                const playerImage = this.images.bike[this.player.direction]; // correct bike image
+                const playerImage = this.images.bike[this.player.direction];
 
                 // remove old player image
                 if (this.player.element) {
                     this.player.element.remove();
                 }
 
-                // add player image
+                // render new player image
                 const playerElement = playerImage.cloneNode();
                 playerElement.style.position = "absolute";
                 playerElement.style.left = `${this.player.x * this.squareSize + (this.squareSize - this.duckIconSize) / 2}px`;
@@ -159,8 +143,10 @@
                 this.player.element = playerElement;
 
                 // render the tail
-                this.player.tail.forEach((segment) => {
-                    const tailImage = this.images.ducks.muddy;
+                this.player.tail.forEach((segment, index) => {
+                    const nextSegment = this.player.tail[index + 1];
+                    const direction = nextSegment ? nextSegment.direction : this.player.direction;
+                    const tailImage = this.images.ducks[direction];
 
                     if (segment.element) {
                         segment.element.remove();
@@ -176,9 +162,12 @@
             }
 
             spawnDuck() {
-                // add a duck randomly
-                const duck = { x: Math.floor(Math.random() * this.numSquares), y: Math.floor(Math.random() * this.numSquares) };
-                const duckElement = this.images.ducks.muddy.cloneNode();
+                let duck;
+                do {
+                    duck = { x: Math.floor(Math.random() * this.numSquares), y: Math.floor(Math.random() * this.numSquares), direction: "up" };
+                } while (this.isOccupied(duck.x, duck.y)); // Ensure ducks do not spawn on the player or its tail
+
+                const duckElement = this.images.ducks.up.cloneNode();
                 duckElement.style.position = "absolute";
                 duckElement.style.left = `${duck.x * this.squareSize + (this.squareSize - this.duckIconSize) / 2}px`;
                 duckElement.style.top = `${duck.y * this.squareSize + this.topBarHeight + (this.squareSize - this.duckIconSize) / 2}px`;
@@ -187,10 +176,15 @@
                 this.gameBoard.appendChild(duckElement);
             }
 
+            isOccupied(x, y) {
+                if (this.player.x === x && this.player.y === y) return true;
+                return this.player.tail.some((segment) => segment.x === x && segment.y === y);
+            }
+
             handleKeyPress(event) {
                 const key = event.key.toLowerCase();
                 if (["w", "a", "s", "d"].includes(key)) {
-                    this.currentKey = key; // change direction
+                    this.currentKey = key;
                 }
             }
 
@@ -198,41 +192,55 @@
                 const direction = this.currentKey;
                 if (!direction) return;
 
-                const newTail = [{ x: this.player.x, y: this.player.y }, ...this.player.tail];
-                newTail.pop();
+                // add new head to the tail
+                const newTail = [{ x: this.player.x, y: this.player.y, direction: this.player.direction }, ...this.player.tail];
+
+                // trim the tail to match the number of collected ducks
+                if (newTail.length > this.score) {
+                    newTail.pop(); // Remove extra segments beyond score
+                }
+
                 this.player.tail = newTail;
 
                 // update player position
-                if (direction === "w") this.player.y--;
-                if (direction === "a") this.player.x--;
-                if (direction === "s") this.player.y++;
-                if (direction === "d") this.player.x++;
+                if (direction === "w") {
+                    this.player.y--;
+                    this.player.direction = "up";
+                } else if (direction === "a") {
+                    this.player.x--;
+                    this.player.direction = "left";
+                } else if (direction === "s") {
+                    this.player.y++;
+                    this.player.direction = "down";
+                } else if (direction === "d") {
+                    this.player.x++;
+                    this.player.direction = "right";
+                }
 
                 this.checkGameOver();
                 this.renderPlayer();
             }
 
             checkGameOver() {
-                // check if the player hit the wall
+                // end the game if the player hits a wall or crosses their own tail
                 if (
                     this.player.x < 0 ||
                     this.player.x >= this.numSquares ||
                     this.player.y < 0 ||
-                    this.player.y >= this.numSquares
+                    this.player.y >= this.numSquares ||
+                    this.player.tail.some((segment) => segment.x === this.player.x && segment.y === this.player.y)
                 ) {
-                    this.endGame("You hit a wall!");
+                    this.endGame("You hit a wall or crossed your own tail!");
                 }
             }
 
             checkCollisions() {
-                // check if the player hit a duck
                 for (let i = this.ducks.length - 1; i >= 0; i--) {
                     const duck = this.ducks[i];
                     if (this.player.x === duck.x && this.player.y === duck.y) {
                         this.ducks.splice(i, 1);
                         duck.element.remove();
-                        this.score++;
-                        this.player.tail.push({ x: duck.x, y: duck.y });
+                        this.score++; // increment score
                         this.spawnDuck();
                         this.updateScore();
                     }
@@ -240,13 +248,11 @@
             }
 
             updateScore() {
-                // update the top bar with the score
                 const topBar = document.getElementById("top-bar");
                 topBar.innerText = `Score: ${this.score}`;
             }
 
             startGameLoop() {
-                // repeat game actions every 250ms
                 this.gameInterval = setInterval(() => {
                     this.movePlayer();
                     this.checkCollisions();
@@ -254,14 +260,12 @@
             }
 
             endGame(message) {
-                // stop game and reload
                 clearInterval(this.gameInterval);
                 alert(`${message} Game Over! Final Score: ${this.score}`);
                 window.location.reload();
             }
         }
 
-        // start the game when the page loads
         window.onload = () => {
             new BikeGame();
         };
