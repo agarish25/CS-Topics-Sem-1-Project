@@ -6,11 +6,13 @@ import GamePage from "./Pages/GamePage";
 import About from "./Pages/About";
 import Leaderboard from "./Pages/Leaderboard";
 import './App.css';
+import BikeGame from "./BikeGame";
 
 function App() {
   return (
     <BrowserRouter>
       <NavBar />
+      <BikeGame />
       
       <Routes>
         <Route path="/" element={<Home />} />
