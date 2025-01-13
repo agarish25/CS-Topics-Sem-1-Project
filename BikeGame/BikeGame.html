@@ -126,37 +126,89 @@
                 }
             }
 
+            movePlayer() {
+                const direction = this.currentKey;
+                if (!direction) return;
+
+                // Add the current head position to the tail
+                //this.player.tail.unshift({ x: this.player.x, y: this.player.y, direction: this.player.direction });
+
+                // Limit the tail length to match the score
+                if (this.player.tail.length > this.score) {
+                    this.player.tail.pop(); // Remove excess segments
+                    const removedSegment = this.player.tail.pop(); // Remove the oldest segment
+                    if (removedSegment.element) {
+                        removedSegment.element.remove(); // Remove the corresponding DOM element
+                    }
+                }
+
+                // Update player position based on the current direction
+                if (direction === "w") {
+                    this.player.y--;
+                    this.player.direction = "up";
+                } else if (direction === "a") {
+                    this.player.x--;
+                    this.player.direction = "left";
+                } else if (direction === "s") {
+                    this.player.y++;
+                    this.player.direction = "down";
+                } else if (direction === "d") {
+                    this.player.x++;
+                    this.player.direction = "right";
+                }
+
+                // Check for game over conditions
+                this.checkGameOver();
+
+                // Render the updated player and tail
+                this.renderPlayer();
+            }
+
             renderPlayer() {
                 const playerImage = this.images.bike[this.player.direction];
 
-                // remove old player image
+                // Remove the previous player image
                 if (this.player.element) {
                     this.player.element.remove();
                 }
 
-                // render new player image
+                // Render the new player image
                 const playerElement = playerImage.cloneNode();
                 playerElement.style.position = "absolute";
                 playerElement.style.left = `${this.player.x * this.squareSize + (this.squareSize - this.duckIconSize) / 2}px`;
                 playerElement.style.top = `${this.player.y * this.squareSize + this.topBarHeight + (this.squareSize - this.duckIconSize) / 2}px`;
                 this.gameBoard.appendChild(playerElement);
                 this.player.element = playerElement;
+                
+                // DEBUG: Log the player's position and tail length
+                console.log("Player position:", this.player.x, this.player.y);
+                console.log("Tail length:", this.player.tail.length);
 
-                // render the tail
+                // Remove all existing tail elements from the DOM before re-rendering
+                const existingTailElements = document.querySelectorAll(".tail-segment");
+                existingTailElements.forEach((el) => el.remove());
+
+                // Render the tail
                 this.player.tail.forEach((segment, index) => {
-                    const nextSegment = this.player.tail[index + 1];
-                    const direction = nextSegment ? nextSegment.direction : this.player.direction;
-                    const tailImage = this.images.ducks[direction];
+                    const tailDirection = index === 0 ? this.player.direction : this.player.tail[index - 1].direction;
+                    const tailImage = this.images.ducks[tailDirection];
 
+                    // Remove the previous segment image
                     if (segment.element) {
                         segment.element.remove();
+                        segment.element.style.left = `${segment.x * this.squareSize + (this.squareSize - this.duckIconSize) / 2}px`;
+                        segment.element.style.top = `${segment.y * this.squareSize + this.topBarHeight + (this.squareSize - this.duckIconSize) / 2}px`;
+ 
                     }
 
+                    // Render the new segment image
                     const tailElement = tailImage.cloneNode();
                     tailElement.style.position = "absolute";
                     tailElement.style.left = `${segment.x * this.squareSize + (this.squareSize - this.duckIconSize) / 2}px`;
                     tailElement.style.top = `${segment.y * this.squareSize + this.topBarHeight + (this.squareSize - this.duckIconSize) / 2}px`;
                     this.gameBoard.appendChild(tailElement);
+
+                    // Assign the created element to the segment
                     segment.element = tailElement;
                 });
             }
@@ -167,7 +219,7 @@
                     duck = { x: Math.floor(Math.random() * this.numSquares), y: Math.floor(Math.random() * this.numSquares), direction: "up" };
                 } while (this.isOccupied(duck.x, duck.y)); // Ensure ducks do not spawn on the player or its tail
 
-                const duckElement = this.images.ducks.up.cloneNode();
+                const duckElement = this.images.ducks.right.cloneNode();
                 duckElement.style.position = "absolute";
                 duckElement.style.left = `${duck.x * this.squareSize + (this.squareSize - this.duckIconSize) / 2}px`;
                 duckElement.style.top = `${duck.y * this.squareSize + this.topBarHeight + (this.squareSize - this.duckIconSize) / 2}px`;
@@ -186,39 +238,6 @@
                 if (["w", "a", "s", "d"].includes(key)) {
                     this.currentKey = key;
                 }
-            }
-
-            movePlayer() {
-                const direction = this.currentKey;
-                if (!direction) return;
-
-                // add new head to the tail
-                const newTail = [{ x: this.player.x, y: this.player.y, direction: this.player.direction }, ...this.player.tail];
-
-                // trim the tail to match the number of collected ducks
-                if (newTail.length > this.score) {
-                    newTail.pop(); // Remove extra segments beyond score
-                }
-
-                this.player.tail = newTail;
-
-                // update player position
-                if (direction === "w") {
-                    this.player.y--;
-                    this.player.direction = "up";
-                } else if (direction === "a") {
-                    this.player.x--;
-                    this.player.direction = "left";
-                } else if (direction === "s") {
-                    this.player.y++;
-                    this.player.direction = "down";
-                } else if (direction === "d") {
-                    this.player.x++;
-                    this.player.direction = "right";
-                }
-
-                this.checkGameOver();
-                this.renderPlayer();
             }
 
             checkGameOver() {
