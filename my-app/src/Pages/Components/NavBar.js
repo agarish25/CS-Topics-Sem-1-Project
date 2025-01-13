@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 
 const NavBar = () => {
     return (
-        <nav className="navbar">
-            <h1>Java Game Hub</h1>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Java Game Hub</a>
             <div className="links">
                 <Link to="/">Home</Link>
                 <Link to="/leaderboard">Leaderboard</Link>
