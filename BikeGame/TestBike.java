@@ -3,6 +3,10 @@ package TestBike;
 import org.teavm.jso.dom.html.*;
 import org.teavm.jso.core.JSArray;
 import org.teavm.jso.core.JSNumber;
+import org.teavm.jso.dom.html.HTMLDivElement;
+import org.teavm.jso.dom.html.HTMLDocument;
+import org.teavm.jso.JSBody;
+import org.teavm.jso.dom.events.KeyboardEvent;
 
 public class TestBike {
 
@@ -20,7 +24,7 @@ public class TestBike {
     private HTMLDivElement gameBoard;
 
     public static void main(String[] args) {
-        new BikeGame().startGame();
+        new TestBike().startGame();
     }
 
     private void startGame() {
@@ -76,7 +80,8 @@ public class TestBike {
         }
 
         // Add keyboard event listener
-        document.addEventListener("keydown", evt -> handleKeyPress(evt.getKeyCode()), false);
+        document.addEventListener("keydown", evt -> handleKeyPress(((KeyboardEvent) evt).getKey()), false);
+
     }
 
     private void handleKeyPress(int keyCode) {
