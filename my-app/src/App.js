@@ -25,15 +25,16 @@ function App() {
             {/* Render the game only if showGame is true */}
             {showGame && <BikeGame />}
         </div>
-
+      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/game/:id" element={<GamePage />} />
         <Route path="/about" element={<About />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
       </Routes>
-        
+      <BikeGame />
     </BrowserRouter>
+    
   );
 }
 
