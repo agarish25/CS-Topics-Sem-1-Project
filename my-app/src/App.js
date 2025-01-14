@@ -14,6 +14,7 @@ function App() {
   return (
     <BrowserRouter>
       <NavBar />
+      // adding button
       <div className="App">
             <h1>Welcome to Bike Game!</h1>
 
