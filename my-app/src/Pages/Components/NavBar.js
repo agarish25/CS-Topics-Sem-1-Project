@@ -5,15 +5,26 @@ const NavBar = () => {
     return (
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="#">Java Game Hub</a>
-            <button class="navbar-toggler" type="button" data-toggler="collapse" data-target="">
+            <button class="navbar-toggler" type="button" data-toggler="collapse" data-target="#navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggle-icon"></span>
             </button>
-            <div className="links">
-                <Link to="/">Home</Link>
-                <Link to="/leaderboard">Leaderboard</Link>
-                <Link to="/about">About</Link>
+
+            <div class="collapse navbar-collaspe" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(Current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Leaderboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
             </div>
         </nav>
+
+        
     )
 
 }
