@@ -9,12 +9,11 @@ import './App.css';
 import BikeGame from "./BikeGame/BikeGame";
 
 function App() {
-  const [showGame, setShowGame] = useState(false); // State to toggle the game visibility
+  const [showGame, setShowGame] = useState(false);
 
   return (
     <BrowserRouter>
       <NavBar />
-      // adding button
       <div className="App">
             <h1>Welcome to Bike Game!</h1>
 
@@ -25,7 +24,7 @@ function App() {
 
             {/* Render the game only if showGame is true */}
             {showGame && <BikeGame />}
-        </div>
+      </div>
       
       <Routes>
         <Route path="/" element={<Home />} />
@@ -33,9 +32,8 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
       </Routes>
-      <BikeGame />
     </BrowserRouter>
-    
+
   );
 }
 
