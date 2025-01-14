@@ -6,7 +6,7 @@ import GamePage from "./Pages/GamePage";
 import About from "./Pages/About";
 import Leaderboard from "./Pages/Leaderboard";
 import './App.css';
-import BikeGame from "./BikeGame";
+import BikeGame from "./BikeGame/BikeGame";
 
 function App() {
   return (

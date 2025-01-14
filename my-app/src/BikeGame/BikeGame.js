@@ -24,16 +24,16 @@ function BikeGame() {
                 // Images
                 this.images = {
                     bike: {
-                        right: this.loadImage("/images/bikeRight.png"),
-                        left: this.loadImage("/images/bikeLeft.png"),
-                        up: this.loadImage("/images/bikeUp.png"),
-                        down: this.loadImage("/images/bikeDown.png"),
+                        right: this.loadImage("/bikeRight.png"),
+                        left: this.loadImage("/bikeLeft.png"),
+                        up: this.loadImage("/bikeUp.png"),
+                        down: this.loadImage("/bikeDown.png"),
                     },
                     ducks: {
-                        up: this.loadImage("/images/duckUp.png"),
-                        right: this.loadImage("/images/duckRight.png"),
-                        down: this.loadImage("/images/duckDown.png"),
-                        left: this.loadImage("/images/duckLeft.png"),
+                        up: this.loadImage("/duckUp.png"),
+                        right: this.loadImage("/duckRight.png"),
+                        down: this.loadImage("/duckDown.png"),
+                        left: this.loadImage("/duckLeft.png"),
                     },
                 };
 
