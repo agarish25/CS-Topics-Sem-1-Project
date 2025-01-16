@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BrowserRouter, Router, Routes, Route } from "react-router-dom";
-import NavBar from "./Pages/Components/NavBar";
+import TopNavBar from "./Pages/Components/NavBar";
 import Home from "./Pages/Home";
 import GamePage from "./Pages/GamePage";
 import About from "./Pages/About";
@@ -13,7 +13,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <NavBar />
+      <TopNavBar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/game/:id" element={<GamePage />} />

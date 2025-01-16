@@ -1,15 +1,32 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Navbar, Nav, Container} from "react-bootstrap";
 
-const NavBar = () => {
+const TopNavBar = () => {
     return (
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Java Game Hub</a>
+        <Navbar bg="light" expand="lg" className="w-100">
+            <Container fluid>
+                <Navbar.Brand href="#">Game Ducky</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="me-auto">
+                        <Nav.Link href="/">Home</Nav.Link>
+                        <Nav.Link href="/games">Games</Nav.Link>
+                        <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
+                        <Nav.Link href="/about">About</Nav.Link>
+                    </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
+        
+        
+        /*<nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Game Ducky</a>
             <button class="navbar-toggler" type="button" data-toggler="collapse" data-target="#navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggle-icon"></span>
             </button>
 
-            <div class="collapse navbar-collaspe" id="navbarSupportedContent">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
                         <a class="nav-link" href="#">Home <span class="sr-only">(Current)</span></a>
@@ -22,11 +39,11 @@ const NavBar = () => {
                     </li>
                 </ul>
             </div>
-        </nav>
+        </nav>*/
 
         
     )
 
 }
 
-export default NavBar;
+export default TopNavBar;

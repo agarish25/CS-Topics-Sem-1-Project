@@ -1,5 +1,5 @@
 import React from "react";
-import NavBar from "./Components/NavBar";
+import TopNavBar from "./Components/NavBar";
 import { Link, BrowserRouter } from "react-router-dom";
 
 const games = [
@@ -9,11 +9,10 @@ const games = [
 ]
 
 const Home = () => {
-    console.log("Home component loaded");
     return (
         <>
-            <NavBar />
-            <div className="home">
+            <TopNavBar />
+            {/*<div className="home">
                 <h1>Welcome to GameDucky!</h1>
                 <div className="Game-Grid">
                     {games.map((game) => (
@@ -25,7 +24,8 @@ const Home = () => {
                         </div>
                     ))}
                 </div>
-            </div>
+            </div>*/}
+            
         </>
     )
 }
