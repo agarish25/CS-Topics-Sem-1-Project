@@ -11,7 +11,6 @@ const games = [
 const Home = () => {
     return (
         <>
-            <TopNavBar />
             {/*<div className="home">
                 <h1>Welcome to GameDucky!</h1>
                 <div className="Game-Grid">
