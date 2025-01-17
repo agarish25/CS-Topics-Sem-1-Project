@@ -13,11 +13,6 @@ function App() {
 
   return (
     <BrowserRouter>
-<<<<<<< HEAD
-      <NavBar />
-      <div className="App">
-            <h1>Welcome to Bike Game!</h1>
-=======
       <TopNavBar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -25,7 +20,6 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
       </Routes>
->>>>>>> 4281a265e16d91906a979cd4f864644aaa438dcd
 
       <div className="App">
             {/* Button to start the game */}
