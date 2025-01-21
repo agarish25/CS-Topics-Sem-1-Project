@@ -10,10 +10,11 @@ const WordHuntGame = () => {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(120);
   const [currentWord, setCurrentWord] = useState("");
-  const [selectedTiles, setSelectedTiles] = useState(new Set());
+  const [selectedTiles, setSelectedTiles] = useState([]);
   const [foundWords, setFoundWords] = useState([]);
   const [wordList, setWordList] = useState(new Set());
   const [gameOver, setGameOver] = useState(false);
+  const lineCanvasRef = useRef();
   const duckRef = useRef();
 
   useEffect(() => {
@@ -30,20 +31,12 @@ const WordHuntGame = () => {
       });
     }, 1000);
 
-    // Add mouse move listener for the duck
-    const handleMouseMove = (e) => {
-      if (duckRef.current) {
-        duckRef.current.style.left = `${e.pageX}px`;
-        duckRef.current.style.top = `${e.pageY}px`;
-      }
-    };
-    document.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      clearInterval(timer);
-      document.removeEventListener("mousemove", handleMouseMove);
-    };
+    return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    drawLines();
+  }, [selectedTiles]);
 
   const loadWords = async () => {
     try {
@@ -86,14 +79,16 @@ const WordHuntGame = () => {
 
     const newWord = grid[row][col];
     setCurrentWord(newWord);
-    setSelectedTiles(new Set([`${row}-${col}`]));
+    setSelectedTiles([{ row, col }]);
+    moveDuckToCell(row, col);
   };
 
   const handleCellMouseEnter = (row, col) => {
-    if (gameOver || selectedTiles.has(`${row}-${col}`)) return;
+    if (gameOver || selectedTiles.some((tile) => tile.row === row && tile.col === col)) return;
 
     setCurrentWord((prev) => prev + grid[row][col]);
-    setSelectedTiles((prev) => new Set(prev).add(`${row}-${col}`));
+    setSelectedTiles((prev) => [...prev, { row, col }]);
+    moveDuckToCell(row, col);
   };
 
   const handleMouseUp = () => {
@@ -108,7 +103,54 @@ const WordHuntGame = () => {
     }
 
     setCurrentWord("");
-    setSelectedTiles(new Set());
+    setSelectedTiles([]);
+    clearLines();
+  };
+
+  const moveDuckToCell = (row, col) => {
+    const cell = document.querySelector(`.board-cell[data-row="${row}"][data-col="${col}"]`);
+    if (cell && duckRef.current) {
+      const rect = cell.getBoundingClientRect();
+      duckRef.current.style.left = `${rect.left + rect.width / 2}px`;
+      duckRef.current.style.top = `${rect.top + rect.height / 2}px`;
+    }
+  };
+
+  const drawLines = () => {
+    const canvas = lineCanvasRef.current;
+    if (!canvas || selectedTiles.length < 2) return;
+
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.strokeStyle = "#ff0000";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+
+    selectedTiles.forEach((tile, index) => {
+      const cell = document.querySelector(`.board-cell[data-row="${tile.row}"][data-col="${tile.col}"]`);
+      if (cell) {
+        const rect = cell.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      }
+    });
+
+    ctx.stroke();
+  };
+
+  const clearLines = () => {
+    const canvas = lineCanvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
   };
 
   const calculateScore = (word) => {
@@ -134,9 +176,9 @@ const WordHuntGame = () => {
               row.map((letter, colIndex) => (
                 <div
                   key={`${rowIndex}-${colIndex}`}
-                  className={`board-cell ${
-                    selectedTiles.has(`${rowIndex}-${colIndex}`) ? "selected" : ""
-                  }`}
+                  className="board-cell"
+                  data-row={rowIndex}
+                  data-col={colIndex}
                   onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
                   onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
                 >
@@ -145,6 +187,17 @@ const WordHuntGame = () => {
               ))
             )}
           </div>
+          <canvas
+            ref={lineCanvasRef}
+            width={window.innerWidth}
+            height={window.innerHeight}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              pointerEvents: "none",
+            }}
+          ></canvas>
           <img
             ref={duckRef}
             id="duck"
