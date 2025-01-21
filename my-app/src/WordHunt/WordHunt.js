@@ -167,6 +167,15 @@ const WordHuntGame = () => {
     }
   };
 
+  // Function to calculate the score
+  const calculateScore = (word) => {
+    if (word.length === 3) return 100;
+    if (word.length === 4) return 300;
+    if (word.length === 5) return 800;
+    if (word.length === 6) return 1200;
+    return 2000;
+  };
+
   const addWord = (word) => {
     if (!foundWords.includes(word)) {
       setFoundWords((prev) => [...prev, word]);
