@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Navbar, Nav, Container} from "react-bootstrap";
+import { Navbar, Nav, Container, Dropdown } from "react-bootstrap";
 
 const TopNavBar = () => {
     return (
@@ -8,10 +8,20 @@ const TopNavBar = () => {
             <Container fluid>
                 <Navbar.Brand href="#">Game Ducky</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                <Navbar.Collapse id="basic-navbar-nav">
+                <Navbar.Collapse id="basic-nav-dropdown">
                     <Nav className="me-auto">
-                        <Nav.Link href="/">Home</Nav.Link>
-                        <Nav.Link href="/games">Games</Nav.Link>
+
+                        <Dropdown>
+                            <Dropdown.Toggle variant="light" id="dropdown-basic">
+                                Games
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item href="/bikegamepage">Bike Game</Dropdown.Item>
+                                <Dropdown.Item href="/ducksweeperpage">MineSweeper</Dropdown.Item>
+                                <Dropdown.Item href="wordduckpage">Word Hunt</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+
                         <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
                         <Nav.Link href="/about">About</Nav.Link>
                     </Nav>

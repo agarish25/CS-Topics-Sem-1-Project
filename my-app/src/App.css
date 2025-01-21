@@ -1,11 +1,36 @@
 .App {
-  text-align: center;
+  text-align: left;
+  margin: 0;
+  padding: 0;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
+
+.container {
+  display: block !important; /* Stop Bootstrap from applying flexbox */
+  margin: 0 auto; /* Center horizontally only if needed */
+}
+
+.row {
+  justify-content: flex-start !important; /* Stop centering rows */
+  align-items: flex-start !important; /* Stop centering items vertically */
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.content-container {
+  margin-top: 56px; /* Push content below the navbar */
+  padding: 20px;
+  text-align: left; /* Align text to the left */
+}
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -15,12 +40,11 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  min-height: calc(100vh - 56px);
+  display: block;
+  padding: 20px;
   font-size: calc(10px + 2vmin);
+  box-sizing: border-box;
   color: white;
 }
 
@@ -35,4 +59,5 @@
   to {
     transform: rotate(360deg);
   }
+
 }
