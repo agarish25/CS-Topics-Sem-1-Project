@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordHunt with Duck</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #484848;
+            font-family: Arial, sans-serif;
+        }
+
+        .wordhunt-container {
+            text-align: center;
+            width: 500px;
+        }
+
+        .scoreboard {
+            margin: 20px;
+            font-size: 20px;
+            color: #fff;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            margin: 0 auto;
+            width: 400px;
+            height: 400px;
+        }
+
+        .board-cell {
+            width: 90px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .board-cell.selected {
+            background-color: #cce7ff;
+        }
+
+        .found-words {
+            margin-top: 20px;
+            color: #fff;
+        }
+
+        .game-over {
+            font-size: 24px;
+            color: red;
+            margin-top: 20px;
+        }
+
+        #duck {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="wordhunt-container">
+        <div class="scoreboard">
+            <p>Score: <span id="score">0</span></p>
+            <p>Time Left: <span id="time-left">120</span>s</p>
+        </div>
+        <div id="board" class="board"></div>
+        <div class="found-words">
+            <h3>Found Words</h3>
+            <ul id="found-words"></ul>
+        </div>
+        <div id="game-over" class="game-over" style="display: none;">Game Over! Final Score: <span id="final-score">0</span></div>
+        <img id="duck" src="duckRight.png" alt="Duck">
+    </div>
+
+    <script>
+class WordHuntGame {
+    constructor() {
+        this.boardElement = document.getElementById("board");
+        this.scoreElement = document.getElementById("score");
+        this.timeLeftElement = document.getElementById("time-left");
+        this.foundWordsElement = document.getElementById("found-words");
+        this.gameOverElement = document.getElementById("game-over");
+        this.finalScoreElement = document.getElementById("final-score");
+        this.duckElement = document.getElementById("duck");
+
+        // vowel pool
+        this.vowels = ["A", "E", "I", "O", "U"];
+
+        // consonant pool with rare letters excluded
+        this.consonants = [
+            "B",
+            "C",
+            "D",
+            "F",
+            "G",
+            "H",
+            "K",
+            "L",
+            "M",
+            "N",
+            "P",
+            "R",
+            "S",
+            "T",
+            "W",
+        ];
+
+        this.grid = this.generateBoard();
+        this.currentWord = "";
+        this.selectedTiles = new Set();
+        this.score = 0;
+        this.timeLeft = 30; // 2-minute timer
+        this.gameOver = false;
+        this.wordList = new Set(); // Stores valid words
+        this.loadWords();
+
+        this.init();
+    }
+
+    loadWords() {
+        fetch("fullWordList.txt")
+            .then((response) => response.text())
+            .then((text) => {
+                const words = text.split(/\r?\n/);
+                words.forEach((word) => this.wordList.add(word.toLowerCase()));
+            })
+            .catch((error) => console.error("Error loading word list:", error));
+    }
+
+    generateBoard() {
+        const letterCounts = {}; // Track occurrences of each letter
+        const grid = Array(4)
+            .fill(null)
+            .map(() => Array(4).fill(null));
+
+        const getRandomLetter = (isVowel) => {
+            const pool = isVowel ? this.vowels : this.consonants;
+            let letter;
+
+            // Keep picking until a valid letter is found
+            do {
+                letter = pool[Math.floor(Math.random() * pool.length)];
+            } while (letterCounts[letter] > 2);
+
+            // Track occurrences
+            letterCounts[letter] = (letterCounts[letter] || 0) + 1;
+            return letter;
+        };
+
+        for (let row = 0; row < 4; row++) {
+            for (let col = 0; col < 4; col++) {
+                // Alternate between vowels and consonants for better distribution
+                const isPrevVowel =
+                    (row > 0 && this.vowels.includes(grid[row - 1][col])) ||
+                    (col > 0 && this.vowels.includes(grid[row][col - 1]));
+
+                // Choose a letter based on alternating logic
+                const letter = getRandomLetter(!isPrevVowel);
+                grid[row][col] = letter;
+            }
+        }
+
+        return grid;
+    }
+
+    init() {
+        this.renderBoard();
+        this.updateScore();
+        this.startTimer();
+    }
+
+    renderBoard() {
+        this.boardElement.innerHTML = "";
+
+        this.grid.forEach((row, rowIndex) => {
+            row.forEach((letter, colIndex) => {
+                const cell = document.createElement("div");
+                cell.classList.add("board-cell");
+                cell.textContent = letter;
+                cell.dataset.row = rowIndex;
+                cell.dataset.col = colIndex;
+
+                cell.addEventListener("mousedown", () =>
+                    this.startSelection(rowIndex, colIndex)
+                );
+                cell.addEventListener("mouseenter", () =>
+                    this.extendSelection(rowIndex, colIndex)
+                );
+                cell.addEventListener("mouseup", () => this.endSelection());
+
+                this.boardElement.appendChild(cell);
+            });
+        });
+
+        // Make the duck follow the mouse
+        document.addEventListener("mousemove", (e) => {
+            this.duckElement.style.left = `${e.pageX}px`;
+            this.duckElement.style.top = `${e.pageY}px`;
+        });
+    }
+
+    startSelection(row, col) {
+        if (this.gameOver) return;
+
+        this.currentWord = this.grid[row][col];
+        this.selectedTiles = new Set([`${row}-${col}`]);
+
+        this.highlightCell(row, col);
+    }
+
+    extendSelection(row, col) {
+        if (
+            this.gameOver ||
+            !this.currentWord ||
+            this.selectedTiles.has(`${row}-${col}`)
+        )
+            return;
+
+        this.currentWord += this.grid[row][col];
+        this.selectedTiles.add(`${row}-${col}`);
+
+        this.highlightCell(row, col);
+    }
+
+    endSelection() {
+        if (this.gameOver || !this.currentWord) return;
+
+        if (
+            this.currentWord.length > 2 &&
+            this.wordList.has(this.currentWord.toLowerCase()) &&
+            ![...this.foundWordsElement.children].some(
+                (li) => li.textContent === this.currentWord
+            )
+        ) {
+            this.addWord(this.currentWord);
+        }
+
+        this.currentWord = "";
+        this.selectedTiles.clear();
+        this.clearHighlights();
+    }
+
+    addWord(word) {
+        const li = document.createElement("li");
+        li.textContent = word;
+        this.foundWordsElement.appendChild(li);
+
+        this.score += this.calculateScore(word);
+        this.updateScore();
+    }
+
+    calculateScore(word) {
+        if (word.length === 3) return 100;
+        if (word.length === 4) return 300;
+        if (word.length === 5) return 800;
+        if (word.length === 6) return 1200;
+        return 2000;
+    }
+
+    updateScore() {
+        this.scoreElement.textContent = this.score;
+    }
+
+    startTimer() {
+        const timer = setInterval(() => {
+            if (this.timeLeft > 0) {
+                this.timeLeft--;
+                this.timeLeftElement.textContent = this.timeLeft;
+            } else {
+                clearInterval(timer);
+                this.endGame();
+            }
+        }, 1000);
+    }
+
+    endGame() {
+        this.gameOver = true;
+        this.finalScoreElement.textContent = this.score;
+        this.gameOverElement.style.display = "block";
+    }
+
+    highlightCell(row, col) {
+        const cell = this.boardElement.querySelector(
+            `.board-cell[data-row="${row}"][data-col="${col}"]`
+        );
+        if (cell) {
+            cell.classList.add("selected");
+        }
+    }
+
+    clearHighlights() {
+        this.boardElement
+            .querySelectorAll(".board-cell.selected")
+            .forEach((cell) => cell.classList.remove("selected"));
+    }
+}
+
+window.onload = () => {
+    new WordHuntGame();
+};
+
+    </script>
+</body>
+</html>

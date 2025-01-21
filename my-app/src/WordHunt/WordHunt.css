@@ -1,0 +1,44 @@
+.wordhunt-container {
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  
+  .scoreboard {
+    margin: 20px;
+    font-size: 20px;
+  }
+  
+  .board {
+    display: inline-block;
+    width: 400px;
+    height: 400px;
+    background-size: cover;
+    position: relative;
+  }
+  
+  .board-row {
+    display: flex;
+  }
+  
+  .board-cell {
+    width: 25%;
+    height: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    user-select: none;
+  }
+  
+  .found-words {
+    margin-top: 20px;
+  }
+  
+  .game-over {
+    font-size: 24px;
+    color: red;
+    margin-top: 20px;
+  }
+  
