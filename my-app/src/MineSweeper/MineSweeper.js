@@ -125,7 +125,7 @@ const DuckMinesweeper = () => {
       <h1>Duck Minesweeper</h1>
       <div className="timer">Time: {time} seconds</div>
       <div className="grid">
-        {grid.map((row, rowIndex) =>s
+        {grid.map((row, rowIndex) =>
           row.map((cell, colIndex) => (
             <div
               key={`${rowIndex}-${colIndex}`}
