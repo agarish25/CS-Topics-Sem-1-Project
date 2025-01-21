@@ -132,21 +132,21 @@ const WordHuntGame = () => {
   const drawLines = () => {
     const canvas = lineCanvasRef.current;
     if (!canvas || selectedTiles.length < 2) return;
-
+  
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ctx.strokeStyle = "#ff0000";
-    ctx.lineWidth = 3;
+  
+    ctx.strokeStyle = "yellow"; // Set line color to yellow
+    ctx.lineWidth = 3; // Line thickness
     ctx.beginPath();
-
+  
     selectedTiles.forEach((tile, index) => {
       const cell = document.querySelector(`.board-cell[data-row="${tile.row}"][data-col="${tile.col}"]`);
       if (cell) {
         const rect = cell.getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.top + rect.height / 2;
-
+  
         if (index === 0) {
           ctx.moveTo(x, y);
         } else {
@@ -154,9 +154,10 @@ const WordHuntGame = () => {
         }
       }
     });
-
+  
     ctx.stroke();
   };
+  
 
   const clearLines = () => {
     const canvas = lineCanvasRef.current;
