@@ -174,24 +174,6 @@ const WordHuntGame = () => {
     }
   };
   
-  const handleMouseUp = () => {
-    if (gameOver || !isMouseDown) return;
-  
-    setIsMouseDown(false); // Stop drawing
-  
-    if (
-      currentWord.length > 2 &&
-      wordList.has(currentWord.toLowerCase()) &&
-      !foundWords.includes(currentWord)
-    ) {
-      addWord(currentWord);
-    }
-  
-    setCurrentWord("");
-    setSelectedTiles([]);
-    clearLines();
-  };
-  
   // Render the scoreboard and found words in the JSX
   return (
     <div className="wordhunt-container" onMouseUp={handleMouseUp}>
