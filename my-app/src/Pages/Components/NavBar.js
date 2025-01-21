@@ -8,7 +8,7 @@ const TopNavBar = () => {
             <Container fluid>
                 <Navbar.Brand href="#">Game Ducky</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-                <Navbar.Collapse id="basic-navbar-nav">
+                <Navbar.Collapse id="basic-nav-dropdown">
                     <Nav className="me-auto">
 
                         <Dropdown>
@@ -16,9 +16,9 @@ const TopNavBar = () => {
                                 Games
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1">Bike Game</Dropdown.Item>
-                                <Dropdown.Item href="#/action-2">MineSweeper</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">Word Hunt</Dropdown.Item>
+                                <Dropdown.Item href="/bikegamepage">Bike Game</Dropdown.Item>
+                                <Dropdown.Item href="/ducksweeperpage">MineSweeper</Dropdown.Item>
+                                <Dropdown.Item href="wordduckpage">Word Hunt</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
 
