@@ -15,6 +15,7 @@ const WordHuntGame = () => {
   const [foundWords, setFoundWords] = useState([]);
   const [wordList, setWordList] = useState(new Set());
   const [gameOver, setGameOver] = useState(false);
+  const [isMouseDown, setIsMouseDown] = useState(false); // Track mouse state
   const lineCanvasRef = useRef();
   const duckRef = useRef();
 
@@ -36,8 +37,12 @@ const WordHuntGame = () => {
   }, []);
 
   useEffect(() => {
-    drawLines();
-  }, [selectedTiles]);
+    if (isMouseDown) {
+      drawLines(); // Only draw lines if mouse is held down
+    } else {
+      clearLines();
+    }
+  }, [selectedTiles, isMouseDown]);
 
   const loadWords = async () => {
     try {
@@ -78,6 +83,7 @@ const WordHuntGame = () => {
   const handleCellMouseDown = (row, col) => {
     if (gameOver) return;
 
+    setIsMouseDown(true); // Start drawing
     const newWord = grid[row][col];
     setCurrentWord(newWord);
     setSelectedTiles([{ row, col }]);
@@ -85,7 +91,12 @@ const WordHuntGame = () => {
   };
 
   const handleCellMouseEnter = (row, col) => {
-    if (gameOver || selectedTiles.some((tile) => tile.row === row && tile.col === col)) return;
+    if (
+      !isMouseDown || // Only allow extension when the mouse is held
+      gameOver ||
+      selectedTiles.some((tile) => tile.row === row && tile.col === col)
+    )
+      return;
 
     setCurrentWord((prev) => prev + grid[row][col]);
     setSelectedTiles((prev) => [...prev, { row, col }]);
@@ -93,14 +104,16 @@ const WordHuntGame = () => {
   };
 
   const handleMouseUp = () => {
-    if (gameOver || currentWord.length < 3) return;
+    if (gameOver || !isMouseDown) return;
+
+    setIsMouseDown(false); // Stop drawing
 
     if (
+      currentWord.length > 2 &&
       wordList.has(currentWord.toLowerCase()) &&
       !foundWords.includes(currentWord)
     ) {
-      setFoundWords((prev) => [...prev, currentWord]);
-      setScore((prev) => prev + calculateScore(currentWord));
+      addWord(currentWord);
     }
 
     setCurrentWord("");
@@ -152,6 +165,11 @@ const WordHuntGame = () => {
       const ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
+  };
+
+  const addWord = (word) => {
+    setFoundWords((prev) => [...prev, word]);
+    setScore((prev) => prev + calculateScore(word));
   };
 
   const calculateScore = (word) => {
