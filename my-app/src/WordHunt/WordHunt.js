@@ -15,7 +15,7 @@ const WordHuntGame = () => {
   const [foundWords, setFoundWords] = useState([]);
   const [wordList, setWordList] = useState(new Set());
   const [gameOver, setGameOver] = useState(false);
-  const [isMouseDown, setIsMouseDown] = useState(false); // Track mouse state
+  const [isMouseDown, setIsMouseDown] = useState(false);
   const lineCanvasRef = useRef();
   const duckRef = useRef();
 
@@ -23,7 +23,6 @@ const WordHuntGame = () => {
     loadWords();
     generateBoard();
 
-    // Start the timer
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev > 0) return prev - 1;
@@ -38,7 +37,7 @@ const WordHuntGame = () => {
 
   useEffect(() => {
     if (isMouseDown) {
-      drawLines(); // Only draw lines if mouse is held down
+      drawLines();
     } else {
       clearLines();
     }
@@ -83,7 +82,7 @@ const WordHuntGame = () => {
   const handleCellMouseDown = (row, col) => {
     if (gameOver) return;
 
-    setIsMouseDown(true); // Start drawing
+    setIsMouseDown(true);
     const newWord = grid[row][col];
     setCurrentWord(newWord);
     setSelectedTiles([{ row, col }]);
@@ -92,7 +91,7 @@ const WordHuntGame = () => {
 
   const handleCellMouseEnter = (row, col) => {
     if (
-      !isMouseDown || // Only allow extension when the mouse is held
+      !isMouseDown ||
       gameOver ||
       selectedTiles.some((tile) => tile.row === row && tile.col === col)
     )
@@ -106,7 +105,7 @@ const WordHuntGame = () => {
   const handleMouseUp = () => {
     if (gameOver || !isMouseDown) return;
 
-    setIsMouseDown(false); // Stop drawing
+    setIsMouseDown(false);
 
     if (
       currentWord.length > 2 &&
