@@ -8,7 +8,6 @@ import BikeGamePage from "./Pages/BikeGamePage";
 import DuckSweeperPage from "./Pages/DuckSweeperPage";
 import WordDuckPage from "./Pages/WordDuckPage";
 import './App.css';
-import BikeGame from "./BikeGame/BikeGame";
 
 function App() {
   const [showGame, setShowGame] = useState(false);
