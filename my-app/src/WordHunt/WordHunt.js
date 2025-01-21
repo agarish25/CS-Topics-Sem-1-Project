@@ -136,7 +136,7 @@ const WordHuntGame = () => {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-    ctx.strokeStyle = "yellow"; // Set line color to yellow
+    ctx.strokeStyle = "blue"; // Set line color to yellow
     ctx.lineWidth = 3; // Line thickness
     ctx.beginPath();
   
@@ -168,18 +168,31 @@ const WordHuntGame = () => {
   };
 
   const addWord = (word) => {
-    setFoundWords((prev) => [...prev, word]);
-    setScore((prev) => prev + calculateScore(word));
+    if (!foundWords.includes(word)) {
+      setFoundWords((prev) => [...prev, word]);
+      setScore((prev) => prev + calculateScore(word));
+    }
   };
-
-  const calculateScore = (word) => {
-    if (word.length === 3) return 100;
-    if (word.length === 4) return 300;
-    if (word.length === 5) return 800;
-    if (word.length === 6) return 1200;
-    return 2000;
+  
+  const handleMouseUp = () => {
+    if (gameOver || !isMouseDown) return;
+  
+    setIsMouseDown(false); // Stop drawing
+  
+    if (
+      currentWord.length > 2 &&
+      wordList.has(currentWord.toLowerCase()) &&
+      !foundWords.includes(currentWord)
+    ) {
+      addWord(currentWord);
+    }
+  
+    setCurrentWord("");
+    setSelectedTiles([]);
+    clearLines();
   };
-
+  
+  // Render the scoreboard and found words in the JSX
   return (
     <div className="wordhunt-container" onMouseUp={handleMouseUp}>
       <div className="scoreboard">
