@@ -1,7 +1,7 @@
 // Duck Minesweeper React Component
 
 import React, { useEffect, useState } from "react";
-import "./DuckMinesweeper.css"; // Import the CSS for styling
+import "./MineSweeper.css"; // Import the CSS for styling
 
 const DuckMinesweeper = () => {
   const rows = 10;

@@ -17,24 +17,14 @@ function App() {
       <>
       <TopNavBar />
       <div className="content-container">
-      <Routes>  
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
-          <Route path="/bikegamepage" element={<BikeGamePage />} />
-          <Route path="/ducksweeperpage" element={<DuckSweeperPage />} />
-          <Route path="/wordduckpage" element={<WordDuckPage />} />
-      </Routes>
-
-        {/* <div className="App">
-              Button to start the game */}
-              {/* <button onClick={() => setShowGame(true)} style={{ padding: "10px 20px", fontSize: "16px" }}>
-                  Start Game
-              </button> */}
-
-              {/* Render the game only if showGame is true */}
-              {/*showGame && <BikeGame />*/}
-        {/* </div> */}
+        <Routes>  
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/bikegamepage" element={<BikeGamePage />} />
+            <Route path="/ducksweeperpage" element={<DuckSweeperPage />} />
+            <Route path="/wordduckpage" element={<WordDuckPage />} />
+        </Routes>
       </div>
       </>
 
