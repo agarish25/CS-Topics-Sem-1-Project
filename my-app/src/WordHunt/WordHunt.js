@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import "./WordHuntGame.css";
+import React, { useState, useEffect } from "react";
+import "./WordHunt.css"; // Add all the CSS styles here
 
 const WordHuntGame = () => {
   const vowels = ["A", "E", "I", "O", "U"];
