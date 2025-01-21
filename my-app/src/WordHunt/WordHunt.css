@@ -1,44 +1,79 @@
-.wordhunt-container {
-    text-align: center;
-    font-family: Arial, sans-serif;
-  }
-  
-  .scoreboard {
-    margin: 20px;
-    font-size: 20px;
-  }
-  
-  .board {
-    display: inline-block;
-    width: 400px;
-    height: 400px;
-    background-size: cover;
-    position: relative;
-  }
-  
-  .board-row {
-    display: flex;
-  }
-  
-  .board-cell {
-    width: 25%;
-    height: 25%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: bold;
-    border: 1px solid #ddd;
-    user-select: none;
-  }
-  
-  .found-words {
-    margin-top: 20px;
-  }
-  
-  .game-over {
-    font-size: 24px;
-    color: red;
-    margin-top: 20px;
-  }
-  
+.minesweeper-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  margin-top: 20px;
+}
+
+h1 {
+  font-size: 2rem;
+  color: #333;
+}
+
+.timer {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr); /* 10 columns for the grid */
+  gap: 5px; /* Space between cells */
+  margin: 20px 0;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #ccc;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.cell.revealed {
+  background-color: #e0ffe0;
+  cursor: default;
+}
+
+.cell.flagged {
+  background-color: #ffefc6;
+  cursor: pointer;
+}
+
+.cell.duck {
+  background-color: #ffe0e0;
+  color: #ff5050;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button:active {
+  background-color: #004494;
+}
+
+.message {
+  font-size: 1.5rem;
+  color: green;
+  margin-top: 10px;
+  text-align: center;
+}
