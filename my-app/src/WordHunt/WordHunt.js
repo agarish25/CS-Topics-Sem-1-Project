@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./WordHuntGame.css";
+import "./WordHunt.css";
+import DuckRight from "./duckRight.png";
 
 const WordHuntGame = () => {
   const vowels = ["A", "E", "I", "O", "U"];
@@ -201,7 +202,7 @@ const WordHuntGame = () => {
           <img
             ref={duckRef}
             id="duck"
-            src="duckRight.png"
+            src={DuckRight}
             alt="Duck"
             style={{
               position: "absolute",
