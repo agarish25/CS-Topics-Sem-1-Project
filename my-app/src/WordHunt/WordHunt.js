@@ -1,24 +1,10 @@
-import React, { useState, useEffect } from "react";
-import "./WordHuntGame.css"; // Add all the CSS styles here
+import React, { useState, useEffect, useRef } from "react";
+import "./WordHuntGame.css";
 
 const WordHuntGame = () => {
   const vowels = ["A", "E", "I", "O", "U"];
   const consonants = [
-    "B",
-    "C",
-    "D",
-    "F",
-    "G",
-    "H",
-    "K",
-    "L",
-    "M",
-    "N",
-    "P",
-    "R",
-    "S",
-    "T",
-    "W",
+    "B", "C", "D", "F", "G", "H", "K", "L", "M", "N", "P", "R", "S", "T", "W",
   ];
   const [grid, setGrid] = useState([]);
   const [score, setScore] = useState(0);
@@ -28,10 +14,13 @@ const WordHuntGame = () => {
   const [foundWords, setFoundWords] = useState([]);
   const [wordList, setWordList] = useState(new Set());
   const [gameOver, setGameOver] = useState(false);
+  const duckRef = useRef();
 
   useEffect(() => {
     loadWords();
     generateBoard();
+
+    // Start the timer
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev > 0) return prev - 1;
@@ -41,7 +30,19 @@ const WordHuntGame = () => {
       });
     }, 1000);
 
-    return () => clearInterval(timer);
+    // Add mouse move listener for the duck
+    const handleMouseMove = (e) => {
+      if (duckRef.current) {
+        duckRef.current.style.left = `${e.pageX}px`;
+        duckRef.current.style.top = `${e.pageY}px`;
+      }
+    };
+    document.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("mousemove", handleMouseMove);
+    };
   }, []);
 
   const loadWords = async () => {
@@ -82,6 +83,7 @@ const WordHuntGame = () => {
 
   const handleCellMouseDown = (row, col) => {
     if (gameOver) return;
+
     const newWord = grid[row][col];
     setCurrentWord(newWord);
     setSelectedTiles(new Set([`${row}-${col}`]));
@@ -89,16 +91,22 @@ const WordHuntGame = () => {
 
   const handleCellMouseEnter = (row, col) => {
     if (gameOver || selectedTiles.has(`${row}-${col}`)) return;
+
     setCurrentWord((prev) => prev + grid[row][col]);
     setSelectedTiles((prev) => new Set(prev).add(`${row}-${col}`));
   };
 
   const handleMouseUp = () => {
     if (gameOver || currentWord.length < 3) return;
-    if (wordList.has(currentWord.toLowerCase()) && !foundWords.includes(currentWord)) {
+
+    if (
+      wordList.has(currentWord.toLowerCase()) &&
+      !foundWords.includes(currentWord)
+    ) {
       setFoundWords((prev) => [...prev, currentWord]);
       setScore((prev) => prev + calculateScore(currentWord));
     }
+
     setCurrentWord("");
     setSelectedTiles(new Set());
   };
@@ -112,7 +120,7 @@ const WordHuntGame = () => {
   };
 
   return (
-    <div className="wordhunt-container">
+    <div className="wordhunt-container" onMouseUp={handleMouseUp}>
       <div className="scoreboard">
         <p>Score: {score}</p>
         <p>Time Left: {timeLeft}s</p>
@@ -120,25 +128,36 @@ const WordHuntGame = () => {
       {gameOver ? (
         <div className="game-over">Game Over! Final Score: {score}</div>
       ) : (
-        <div
-          className="board"
-          onMouseUp={handleMouseUp}
-        >
-          {grid.map((row, rowIndex) =>
-            row.map((letter, colIndex) => (
-              <div
-                key={`${rowIndex}-${colIndex}`}
-                className={`board-cell ${
-                  selectedTiles.has(`${rowIndex}-${colIndex}`) ? "selected" : ""
-                }`}
-                onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
-                onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
-              >
-                {letter}
-              </div>
-            ))
-          )}
-        </div>
+        <>
+          <div className="board">
+            {grid.map((row, rowIndex) =>
+              row.map((letter, colIndex) => (
+                <div
+                  key={`${rowIndex}-${colIndex}`}
+                  className={`board-cell ${
+                    selectedTiles.has(`${rowIndex}-${colIndex}`) ? "selected" : ""
+                  }`}
+                  onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
+                  onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
+                >
+                  {letter}
+                </div>
+              ))
+            )}
+          </div>
+          <img
+            ref={duckRef}
+            id="duck"
+            src="duckRight.png"
+            alt="Duck"
+            style={{
+              position: "absolute",
+              width: "50px",
+              height: "50px",
+              pointerEvents: "none",
+            }}
+          />
+        </>
       )}
       <div className="found-words">
         <h3>Found Words</h3>
