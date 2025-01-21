@@ -14,6 +14,7 @@ function App() {
   return (
     <BrowserRouter>
       <TopNavBar />
+      <div className="content-container">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/game/:id" element={<GamePage />} />
@@ -29,6 +30,7 @@ function App() {
 
             {/* Render the game only if showGame is true */}
             {showGame && <BikeGame />}
+      </div>
       </div>
     </BrowserRouter>
 

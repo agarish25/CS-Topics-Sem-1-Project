@@ -11,6 +11,8 @@ const games = [
 const Home = () => {
     return (
         <>
+            <h1 className="h1">Welcome to Game Ducky!</h1>
+            
             {/*<div className="home">
                 <h1>Welcome to GameDucky!</h1>
                 <div className="Game-Grid">
