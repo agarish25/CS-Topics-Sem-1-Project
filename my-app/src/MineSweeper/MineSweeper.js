@@ -113,10 +113,14 @@ const DuckMinesweeper = () => {
       row.every((cell) => (cell.isDuck ? cell.flagged : true))
     );
 
-    if (revealedCells === totalCells - numDucks && allDucksFlagged) {
+    if (allDucksFlagged && flags === numDucks) {
       setGameOver(true);
       clearInterval(intervalId);
-      alert("Congratulations! You won DuckSweeper!");
+      alert(`Congratulations! You won DuckSweeper in ${time} seconds!`);
+    } else if (revealedCells === totalCells - numDucks) {
+      setGameOver(true);
+      clearInterval(intervalId);
+      alert(`Congratulations! You won DuckSweeper in ${time} seconds!`);
     }
   };
 
@@ -149,8 +153,10 @@ const DuckMinesweeper = () => {
           ))
         )}
       </div>
-      {!gameStarted && <button onClick={initGame}>Start Game</button>}
-      {gameStarted && <button onClick={startNewGame}>Restart Game</button>}
+      <div className="button-container">
+        {!gameStarted && <button onClick={initGame}>Start Game</button>}
+        {gameStarted && <button onClick={startNewGame}>Restart Game</button>}
+      </div>
     </div>
   );
 };
