@@ -6,6 +6,7 @@ import BikeGame from "../BikeGame/BikeGame";
 import BikeGameThumbnail from "../BikeGame/BikeGameThumbnail.png";
 import DuckSweeperThumbnail from "../MineSweeper/DuckSweeperThumbnail.png";
 import WordDuckThumbnail from "../WordHunt/WordDuckThumbnail.png";
+import WordDuckThumbnail1 from "../WordHunt/WordDuckThumbnail1.png";
 
 const games = [
     { id: "1", name: "Bike Game", description:"Google Snake but better", gamePage:"bikegamepage", thumbnail: BikeGameThumbnail },

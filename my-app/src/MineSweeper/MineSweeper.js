@@ -116,13 +116,13 @@ const DuckMinesweeper = () => {
     if (revealedCells === totalCells - numDucks && allDucksFlagged) {
       setGameOver(true);
       clearInterval(intervalId);
-      alert("Congratulations! You won Duck Minesweeper!");
+      alert("Congratulations! You won DuckSweeper!");
     }
   };
 
   return (
     <div className="minesweeper-container">
-      <h1>Duck Minesweeper</h1>
+      <h1>DuckSweeper</h1>
       <div className="timer">Time: {time} seconds</div>
       <div className="grid">
         {grid.map((row, rowIndex) =>
