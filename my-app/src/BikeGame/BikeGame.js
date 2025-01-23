@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
+import { HighScoreContext } from "../Context/HighScoreContext";
 import "./BikeGame.css";
 
 import duckRight from "./duckRight.png";
@@ -12,6 +13,13 @@ import bikeUp from "./bikeUp.png";
 import bikeDown from "./bikeDown.png";
 
 function BikeGame() {
+    const { updateHighScore } = useContext(HighScoreContext);
+
+    const onGameEnd = (score) => {
+        console.log("Game ended with score:", score);
+        updateHighScore("BikeGame", score);
+    }
+    
     const gameBoardRef = useRef(null); // Reference for the game board div
     const [score, setScore] = useState(0); // Keeps track of the player's score
 

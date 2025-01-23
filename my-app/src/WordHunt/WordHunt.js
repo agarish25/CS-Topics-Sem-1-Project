@@ -1,8 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import leaderboard from "../Pages/Leaderboard";
 import "./WordHunt.css";
 import DuckRight from "./duckRight.png";
 
 const WordHuntGame = () => {
+  const { updateHighScore } = useContext(leaderboard);
+
+  const onGameEnd = (score) => {
+    updateHighScore("WordDuck", score);
+  }
+
   const vowels = ["A", "E", "I", "O", "U"];
   const consonants = [
     "B", "C", "D", "F", "G", "H", "K", "L", "M", "N", "P", "R", "S", "T", "W",
