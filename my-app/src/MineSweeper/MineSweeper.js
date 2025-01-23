@@ -6,6 +6,7 @@ const DuckMinesweeper = () => {
   const cols = 10;
   const numDucks = 10;
   const [grid, setGrid] = useState([]);
+  const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [time, setTime] = useState(0);
   const [flags, setFlags] = useState(0);
@@ -13,24 +14,20 @@ const DuckMinesweeper = () => {
   const [intervalId, setIntervalId] = useState(null);
 
   useEffect(() => {
-    initGame();
-  }, []);
-
-  useEffect(() => {
-    if (!gameOver) {
+    if (gameStarted && !gameOver) {
       const timer = setInterval(() => setTime((prevTime) => prevTime + 1), 1000);
       setIntervalId(timer);
     }
     return () => clearInterval(intervalId);
-  }, [gameOver]);
+  }, [gameStarted, gameOver]);
 
   const initGame = () => {
     setTime(0);
     setGameOver(false);
     setFlags(0);
     setRevealedCells(0);
+    setGameStarted(true);
 
-    // Generate initial grid
     const newGrid = Array.from({ length: rows }, () =>
       Array.from({ length: cols }, () => ({
         revealed: false,
@@ -40,7 +37,6 @@ const DuckMinesweeper = () => {
       }))
     );
 
-    // Place ducks
     let placedDucks = 0;
     while (placedDucks < numDucks) {
       const row = Math.floor(Math.random() * rows);
@@ -49,7 +45,6 @@ const DuckMinesweeper = () => {
         newGrid[row][col].isDuck = true;
         placedDucks++;
 
-        // Update neighbor counts
         for (let r = row - 1; r <= row + 1; r++) {
           for (let c = col - 1; c <= col + 1; c++) {
             if (r >= 0 && r < rows && c >= 0 && c < cols) {
@@ -60,6 +55,11 @@ const DuckMinesweeper = () => {
       }
     }
     setGrid(newGrid);
+  };
+
+  const startNewGame = () => {
+    setGameStarted(false);
+    initGame();
   };
 
   const revealCell = (row, col) => {
@@ -149,7 +149,8 @@ const DuckMinesweeper = () => {
           ))
         )}
       </div>
-      <button onClick={initGame}>Restart Game</button>
+      {!gameStarted && <button onClick={initGame}>Start Game</button>}
+      {gameStarted && <button onClick={startNewGame}>Restart Game</button>}
     </div>
   );
 };
