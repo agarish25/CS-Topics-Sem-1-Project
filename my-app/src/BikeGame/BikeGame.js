@@ -13,16 +13,26 @@ import bikeUp from "./bikeUp.png";
 import bikeDown from "./bikeDown.png";
 
 function BikeGame() {
-    const { updateHighScore } = useContext(HighScoreContext);
+  const { updateHighScore } = useContext(HighScoreContext);
 
-    const onGameEnd = (score) => {
-        console.log("Game ended with score:", score);
-        updateHighScore("BikeGame", score);
-    }
-    
   const gameBoardRef = useRef(null);
+  const scoreRef = useRef(0); // Ref to track the score in real-time
   const [score, setScore] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
+
+  const endGame = () => {
+    alert(`Game Over! You collected ${scoreRef.current} ducks!`);
+    updateHighScore("BikeGame", scoreRef.current);
+    setGameStarted(false);
+    setScore(0); // Reset state score
+    scoreRef.current = 0; // Reset the ref
+  };
+
+  const startGame = () => {
+    setScore(0); // Reset state score
+    scoreRef.current = 0; // Reset the score ref
+    setGameStarted(true);
+  };
 
   useEffect(() => {
     let gameInstance;
@@ -38,7 +48,6 @@ function BikeGame() {
           this.duckIconSize = 35;
           this.player = { x: 5, y: 5, direction: "up", element: null };
           this.ducks = [];
-          this.currentKey = "up";
           this.gameInterval = null;
 
           this.images = {
@@ -123,8 +132,7 @@ function BikeGame() {
             this.player.y >= this.numSquares
           ) {
             clearInterval(this.gameInterval);
-            alert("Game Over!");
-            setGameStarted(false);
+            endGame(); // End the game and show the score
           }
         }
 
@@ -175,7 +183,11 @@ function BikeGame() {
             if (this.player.x === duck.x && this.player.y === duck.y) {
               this.ducks.splice(i, 1);
               duck.element.remove();
-              this.updateScore((prev) => prev + 1);
+              this.updateScore((prev) => {
+                const newScore = prev + 1;
+                scoreRef.current = newScore; // Update the score ref
+                return newScore;
+              });
               this.spawnDuck();
             }
           }
@@ -195,7 +207,7 @@ function BikeGame() {
   return (
     <div className="game-wrapper">
       {!gameStarted && (
-        <button className="start-button" onClick={() => setGameStarted(true)}>
+        <button className="start-button" onClick={startGame}>
           Start Game
         </button>
       )}
@@ -203,7 +215,7 @@ function BikeGame() {
         <div>
           <div id="game-board" ref={gameBoardRef}></div>
           <div id="top-bar">Score: {score} - Use W A S D to move</div>
-          <button className="start-button" onClick={() => setGameStarted(false)}>
+          <button className="start-button" onClick={endGame}>
             Restart Game
           </button>
         </div>
