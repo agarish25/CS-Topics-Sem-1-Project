@@ -49,6 +49,7 @@ const WordHuntGame = () => {
       const text = await response.text();
       const words = text.split(/\r?\n/);
       setWordList(new Set(words.map((word) => word.toLowerCase())));
+      console.log("Loaded Words:", words.slice(0, 10)); // Log first 10 words
     } catch (error) {
       console.error("Error loading word list:", error);
     }
