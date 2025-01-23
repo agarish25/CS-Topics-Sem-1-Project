@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import leaderboard from "../Pages/Leaderboard";
+import { HighScoreContext } from "../Context/HighScoreContext";
 import "./MineSweeper.css"; // Place all styles in this CSS file
 
 const DuckMinesweeper = () => {
-  const { updateHighScore } = useContext(leaderboard);
+  const { updateHighScore } = useContext(HighScoreContext);
 
   const onGameEnd = (score) => {
     updateHighScore("DuckSweeper", score);

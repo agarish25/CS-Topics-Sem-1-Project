@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import leaderboard from "../Pages/Leaderboard";
+import { HighScoreContext } from "../Context/HighScoreContext";
 import "./WordHunt.css";
 import DuckRight from "./duckRight.png";
 
 const WordHuntGame = () => {
-  const { updateHighScore } = useContext(leaderboard);
+  const { updateHighScore } = useContext(HighScoreContext);
 
   const onGameEnd = (score) => {
     updateHighScore("WordDuck", score);
