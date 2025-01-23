@@ -17,6 +17,7 @@
   background-size: cover;
   position: relative;
   gap: 2px; /* Adds space between cells */
+  margin: 0 auto; /* Center the board */
 }
 
 .board-cell {
@@ -44,4 +45,39 @@
   font-size: 24px;
   color: red;
   margin-top: 20px;
+}
+
+.start-button,
+.restart-button {
+  padding: 10px 20px;
+  font-size: 18px;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 20px; /* Add spacing from other elements */
+}
+
+.start-button:hover,
+.restart-button:hover {
+  background-color: #0056b3;
+}
+
+.start-button:active,
+.restart-button:active {
+  background-color: #003f7f;
+  transform: scale(0.98); /* Slightly shrink the button on click */
+}
+
+.start-button {
+  display: inline-block; /* Align center for the start button */
+  margin: 20px auto; /* Center horizontally */
+}
+
+.restart-button {
+  display: block;
+  margin: 20px auto; /* Center horizontally */
 }

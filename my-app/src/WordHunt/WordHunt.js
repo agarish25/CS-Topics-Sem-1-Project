@@ -2,13 +2,10 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { HighScoreContext } from "../Context/HighScoreContext";
 import "./WordHunt.css";
 import DuckRight from "./duckRight.png";
+import Words from "./fullWordList.txt";
 
 const WordHuntGame = () => {
   const { updateHighScore } = useContext(HighScoreContext);
-
-  const onGameEnd = (score) => {
-    updateHighScore("WordDuck", score);
-  }
 
   const vowels = ["A", "E", "I", "O", "U"];
   const consonants = [
@@ -16,31 +13,35 @@ const WordHuntGame = () => {
   ];
   const [grid, setGrid] = useState([]);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(120);
+  const [timeLeft, setTimeLeft] = useState(30);
   const [currentWord, setCurrentWord] = useState("");
   const [selectedTiles, setSelectedTiles] = useState([]);
   const [foundWords, setFoundWords] = useState([]);
   const [wordList, setWordList] = useState(new Set());
   const [gameOver, setGameOver] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false); // Track whether the game has started
   const lineCanvasRef = useRef();
   const duckRef = useRef();
 
   useEffect(() => {
-    loadWords();
-    generateBoard();
+    if (gameStarted) {
+      loadWords();
+      generateBoard();
+      setGameOver(false);
 
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev > 0) return prev - 1;
-        setGameOver(true);
-        clearInterval(timer);
-        return 0;
-      });
-    }, 1000);
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev > 0) return prev - 1;
+          setGameOver(true);
+          clearInterval(timer);
+          return 0;
+        });
+      }, 1000);
 
-    return () => clearInterval(timer);
-  }, []);
+      return () => clearInterval(timer);
+    }
+  }, [gameStarted]);
 
   useEffect(() => {
     if (isMouseDown) {
@@ -52,11 +53,10 @@ const WordHuntGame = () => {
 
   const loadWords = async () => {
     try {
-      const response = await fetch("fullWordList.txt");
+      const response = await fetch(Words);
       const text = await response.text();
       const words = text.split(/\r?\n/);
       setWordList(new Set(words.map((word) => word.toLowerCase())));
-      console.log("Loaded Words:", words.slice(0, 10)); // Log first 10 words
     } catch (error) {
       console.error("Error loading word list:", error);
     }
@@ -144,7 +144,7 @@ const WordHuntGame = () => {
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-    ctx.strokeStyle = "blue"; // Set line color to yellow
+    ctx.strokeStyle = "blue"; // Set line color to blue
     ctx.lineWidth = 3; // Line thickness
     ctx.beginPath();
   
@@ -165,7 +165,6 @@ const WordHuntGame = () => {
   
     ctx.stroke();
   };
-  
 
   const clearLines = () => {
     const canvas = lineCanvasRef.current;
@@ -175,7 +174,6 @@ const WordHuntGame = () => {
     }
   };
 
-  // Function to calculate the score
   const calculateScore = (word) => {
     if (word.length === 3) return 100;
     if (word.length === 4) return 300;
@@ -190,67 +188,93 @@ const WordHuntGame = () => {
       setScore((prev) => prev + calculateScore(word));
     }
   };
-  
-  // Render the scoreboard and found words in the JSX
+
+  const restartGame = () => {
+    setGameOver(false); // Reset game over state
+    setGameStarted(false); // Temporarily stop the game
+    setScore(0); // Reset the score
+    setTimeLeft(30); // Reset the timer
+    setFoundWords([]); // Clear found words
+    setSelectedTiles([]); // Clear selected tiles
+    setCurrentWord(""); // Reset the current word
+    generateBoard(); // Generate a new game board
+    
+    // Restart the game after resetting everything
+    setTimeout(() => setGameStarted(true), 100);
+  };
+
   return (
     <div className="wordhunt-container" onMouseUp={handleMouseUp}>
-      <div className="scoreboard">
-        <p>Score: {score}</p>
-        <p>Time Left: {timeLeft}s</p>
-      </div>
-      {gameOver ? (
-        <div className="game-over">Game Over! Final Score: {score}</div>
+      {!gameStarted ? (
+        <button className="start-button" onClick={() => setGameStarted(true)}>
+          Start Game
+        </button>
       ) : (
         <>
-          <div className="board">
-            {grid.map((row, rowIndex) =>
-              row.map((letter, colIndex) => (
-                <div
-                  key={`${rowIndex}-${colIndex}`}
-                  className="board-cell"
-                  data-row={rowIndex}
-                  data-col={colIndex}
-                  onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
-                  onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
-                >
-                  {letter}
-                </div>
-              ))
-            )}
+          <div className="scoreboard">
+            <p>Score: {score}</p>
+            <p>Time Left: {timeLeft}s</p>
           </div>
-          <canvas
-            ref={lineCanvasRef}
-            width={window.innerWidth}
-            height={window.innerHeight}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              pointerEvents: "none",
-            }}
-          ></canvas>
-          <img
-            ref={duckRef}
-            id="duck"
-            src={DuckRight}
-            alt="Duck"
-            style={{
-              position: "absolute",
-              width: "50px",
-              height: "50px",
-              pointerEvents: "none",
-            }}
-          />
+          {gameOver ? (
+            <div className="game-over">
+              Game Over! Final Score: {score}
+              <button className="restart-button" onClick={restartGame}>
+                Restart Game
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="board">
+                {grid.map((row, rowIndex) =>
+                  row.map((letter, colIndex) => (
+                    <div
+                      key={`${rowIndex}-${colIndex}`}
+                      className="board-cell"
+                      data-row={rowIndex}
+                      data-col={colIndex}
+                      onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
+                      onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
+                    >
+                      {letter}
+                    </div>
+                  ))
+                )}
+              </div>
+              <canvas
+                ref={lineCanvasRef}
+                width={window.innerWidth}
+                height={window.innerHeight}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  pointerEvents: "none",
+                }}
+              ></canvas>
+              <img
+                ref={duckRef}
+                id="duck"
+                src={DuckRight}
+                alt="Duck"
+                style={{
+                  position: "absolute",
+                  width: "50px",
+                  height: "50px",
+                  pointerEvents: "none",
+                }}
+              />
+            </>
+          )}
+          <div className="found-words">
+            <h3>Found Words</h3>
+            <ul>
+              {foundWords.map((word, index) => (
+                <li key={index}>{word}</li>
+              ))}
+            </ul>
+          </div>
         </>
       )}
-      <div className="found-words">
-        <h3>Found Words</h3>
-        <ul>
-          {foundWords.map((word, index) => (
-            <li key={index}>{word}</li>
-          ))}
-        </ul>
-      </div>
     </div>
   );
 };
