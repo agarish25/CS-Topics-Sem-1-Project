@@ -13,7 +13,12 @@ import bikeUp from "./bikeUp.png";
 import bikeDown from "./bikeDown.png";
 
 function BikeGame() {
-  const { updateHighScore } = useContext(HighScoreContext);
+    const { updateHighScore } = useContext(HighScoreContext);
+    
+      const onGameEnd = (score) => {
+        console.log(`updating BikeGame records with score of ${score}`);
+        updateHighScore("BikeGame", score);
+      }
 
   const gameBoardRef = useRef(null);
   const scoreRef = useRef(0); // Ref to track the score in real-time
@@ -132,7 +137,9 @@ function BikeGame() {
             this.player.y >= this.numSquares
           ) {
             clearInterval(this.gameInterval);
-            endGame(); // End the game and show the score
+            alert("Game Over!");
+            setGameStarted(false);
+            onGameEnd(score);
           }
         }
 
@@ -183,11 +190,7 @@ function BikeGame() {
             if (this.player.x === duck.x && this.player.y === duck.y) {
               this.ducks.splice(i, 1);
               duck.element.remove();
-              this.updateScore((prev) => {
-                const newScore = prev + 1;
-                scoreRef.current = newScore; // Update the score ref
-                return newScore;
-              });
+              this.updateScore((prev) => prev + 1);
               this.spawnDuck();
             }
           }
@@ -207,7 +210,7 @@ function BikeGame() {
   return (
     <div className="game-wrapper">
       {!gameStarted && (
-        <button className="start-button" onClick={startGame}>
+        <button className="start-button" onClick={() => setGameStarted(true)}>
           Start Game
         </button>
       )}
@@ -215,7 +218,7 @@ function BikeGame() {
         <div>
           <div id="game-board" ref={gameBoardRef}></div>
           <div id="top-bar">Score: {score} - Use W A S D to move</div>
-          <button className="start-button" onClick={endGame}>
+          <button className="start-button" onClick={() => setGameStarted(false)}>
             Restart Game
           </button>
         </div>

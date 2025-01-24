@@ -7,9 +7,9 @@ import BikeGame from "../BikeGame/BikeGame";
 const BikeGamePage = () => {
 
     return (
-        <>
+        <div>
             <BikeGame />
-        </>
+        </ div>
     )
 }
 

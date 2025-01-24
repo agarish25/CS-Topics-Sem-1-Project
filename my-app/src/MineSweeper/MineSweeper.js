@@ -6,6 +6,7 @@ const DuckMinesweeper = () => {
   const { updateHighScore } = useContext(HighScoreContext);
 
   const onGameEnd = (score) => {
+    console.log(`updating DuckSweeper records with time of ${score}`);
     updateHighScore("DuckSweeper", score);
   }
 
@@ -124,10 +125,12 @@ const DuckMinesweeper = () => {
       setGameOver(true);
       clearInterval(intervalId);
       alert(`Congratulations! You won DuckSweeper in ${time} seconds!`);
+      onGameEnd(time);
     } else if (revealedCells === totalCells - numDucks) {
       setGameOver(true);
       clearInterval(intervalId);
       alert(`Congratulations! You won DuckSweeper in ${time} seconds!`);
+      onGameEnd(time);
     }
   };
 

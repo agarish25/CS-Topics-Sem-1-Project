@@ -1,20 +1,40 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 // Create the context
 export const HighScoreContext = createContext();
 
-// Create a provider component
+// HighScoreContext Provider component
 export const HighScoreProvider = ({ children }) => {
-    const [highScores, setHighScores] = useState({});
+    const [highScores, setHighScores] = useState({
+        BikeGame: 0,
+        DuckSweeper: 0,
+        WordDuck: 0,
+    });
 
-    // Function to update high scores
-    const updateHighScore = (game, score) => {
+    // Load high scores from localStorage
+    useEffect(() => {
+        const savedScores = localStorage.getItem("highScores");
+        if (savedScores) {
+            setHighScores(JSON.parse(savedScores));
+        }
+    }, []);
+
+    // Update high score for a specific game
+    const updateHighScore = (game, newScore) => {
+        console.log(`Updating high score for ${game}. Current score: ${newScore}`);
         setHighScores((prevScores) => {
-            const currentHighScore = prevScores[game] || 0;
-            if (score > currentHighScore) {
-                return { ...prevScores, [game]: score };
-            }
-            return prevScores;
+            let operator = Math.max;
+            if (game == "DuckSweeper" && prevScores != 0){
+                operator = Math.min;
+            };
+
+            const updatedScores = {
+                ...prevScores,
+                [game]: operator(prevScores[game], newScore),
+            };
+
+            localStorage.setItem("highScores", JSON.stringify(updatedScores));
+            return updatedScores;
         });
     };
 
@@ -24,3 +44,4 @@ export const HighScoreProvider = ({ children }) => {
         </HighScoreContext.Provider>
     );
 };
+

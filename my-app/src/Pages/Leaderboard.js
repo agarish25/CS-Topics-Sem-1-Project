@@ -1,37 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, BrowserRouter } from "react-router-dom";
 import { Container, Table, Button } from "react-bootstrap";
+import { HighScoreContext } from "../Context/HighScoreContext";
 
 
 const Leaderboard = () => {
     // initializes high scores to 0 for each game
-    const [highScores, setHighScores] = useState ({
-        BikeGame: 0,
-        DuckSweeper: 0,
-        WordDuck: 0,
-    });
-
-    // loads high scores from localStorage
-    useEffect(() => {
-        const savedScores = localStorage.getItem("highScores");
-        if (savedScores) {
-            setHighScores(JSON.parse(savedScores));
-        }
-    }, []);
-
-    // updates high scores when new score is passed
-    const updateHighScore = (game, newScore) => {
-        console.log(`Updating high score for ${game}. Current score: ${newScore}`);
-        setHighScores((prevScores) => {
-            const updatedScores = {
-                ...prevScores,
-                [game]: Math.max(prevScores[game], newScore),
-            };
-
-            localStorage.setItem("highScores", JSON.stringify(updatedScores));
-            return updatedScores;
-        });
-    };
+    const { highScores, updateHighScore } = useContext(HighScoreContext);
 
     return (
         <Container>
@@ -46,15 +21,15 @@ const Leaderboard = () => {
                 <tbody>
                     <tr>
                         <th>Bike Game</th>
-                        <th>{highScores.BikeGame}</th>
+                        <th>{highScores.BikeGame} Ducks</th>
                     </tr>
                     <tr>
                         <th>DuckSweeper</th>
-                        <th>{highScores.DuckSweeper}</th>
+                        <th>{highScores.DuckSweeper} Seconds</th>
                     </tr>
                     <tr>
                         <th>Word Duck</th>
-                        <th>{highScores.WordDuck}</th>
+                        <th>{highScores.WordDuck} Seconds</th>
                     </tr>
                 </tbody>
             </Table>
@@ -62,7 +37,9 @@ const Leaderboard = () => {
             <Button variant="danger"
                 onClick = {() => {
                     localStorage.removeItem("highScores");
-                    setHighScores({ BikeGame:0, DuckSweeper:0, WordDuck:0});
+                    updateHighScore("BikeGame", 0);
+                    updateHighScore("DuckSweeper", 0);
+                    updateHighScore("WordDuck", 0);
                 }}
             >
                 RESET HIGH SCORES
