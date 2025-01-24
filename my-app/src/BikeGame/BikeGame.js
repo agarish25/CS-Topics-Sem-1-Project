@@ -209,6 +209,10 @@ function BikeGame() {
 
   return (
     <div className="game-wrapper">
+        <div className="game-header">
+            <h1>Bike Game</h1>
+            <p>Current Score: 0</p>
+        </div>
       {!gameStarted && (
         <button className="start-button" onClick={() => setGameStarted(true)}>
           Start Game
