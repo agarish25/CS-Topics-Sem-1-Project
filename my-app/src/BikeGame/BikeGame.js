@@ -13,24 +13,24 @@ import bikeUp from "./bikeUp.png";
 import bikeDown from "./bikeDown.png";
 
 function BikeGame() {
-    const { updateHighScore } = useContext(HighScoreContext);
-    
-      const onGameEnd = (score) => {
-        console.log(`updating BikeGame records with score of ${score}`);
-        updateHighScore("BikeGame", score);
-      }
+  const { updateHighScore } = useContext(HighScoreContext);
 
   const gameBoardRef = useRef(null);
   const scoreRef = useRef(0); // Ref to track the score in real-time
   const [score, setScore] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
+  const gameInstanceRef = useRef(null); // Reference for the game instance
 
   const endGame = () => {
-    alert(`Game Over! You collected ${scoreRef.current} ducks!`);
+    alert(`Game Over!`);
     updateHighScore("BikeGame", scoreRef.current);
     setGameStarted(false);
     setScore(0); // Reset state score
     scoreRef.current = 0; // Reset the ref
+    if (gameInstanceRef.current) {
+      clearInterval(gameInstanceRef.current.gameInterval); // Clear any running intervals
+      gameInstanceRef.current = null; // Reset the game instance
+    }
   };
 
   const startGame = () => {
@@ -40,13 +40,12 @@ function BikeGame() {
   };
 
   useEffect(() => {
-    let gameInstance;
-
     if (gameStarted && gameBoardRef.current) {
       class BikeGame {
-        constructor(gameBoard, updateScore) {
+        constructor(gameBoard, updateScore, endGameCallback) {
           this.gameBoard = gameBoard;
           this.updateScore = updateScore;
+          this.endGameCallback = endGameCallback;
 
           this.numSquares = 12;
           this.squareSize = 40;
@@ -137,9 +136,7 @@ function BikeGame() {
             this.player.y >= this.numSquares
           ) {
             clearInterval(this.gameInterval);
-            alert("Game Over!");
-            setGameStarted(false);
-            onGameEnd(score);
+            this.endGameCallback();
           }
         }
 
@@ -168,12 +165,11 @@ function BikeGame() {
             duck = {
               x: Math.floor(Math.random() * this.numSquares),
               y: Math.floor(Math.random() * this.numSquares),
-              direction: "right",
             };
           } while (this.player.x === duck.x && this.player.y === duck.y);
 
           const duckElement = document.createElement("img");
-          duckElement.src = this.images.ducks[duck.direction];
+          duckElement.src = this.images.ducks.right;
           duckElement.style.position = "absolute";
           duckElement.style.width = `${this.duckIconSize}px`;
           duckElement.style.height = `${this.duckIconSize}px`;
@@ -197,24 +193,28 @@ function BikeGame() {
         }
       }
 
-      gameInstance = new BikeGame(gameBoardRef.current, setScore);
+      gameInstanceRef.current = new BikeGame(gameBoardRef.current, (newScore) => {
+        setScore(newScore);
+        scoreRef.current = newScore;
+      }, endGame);
     }
 
     return () => {
-      if (gameInstance) {
-        clearInterval(gameInstance.gameInterval);
+      if (gameInstanceRef.current) {
+        clearInterval(gameInstanceRef.current.gameInterval);
+        gameInstanceRef.current = null;
       }
     };
   }, [gameStarted]);
 
   return (
     <div className="game-wrapper">
-        <div className="game-header">
-            <h1>Bike Game</h1>
-            <p>Current Score: 0</p>
-        </div>
+      <div className="game-header">
+        <h1>Bike Game</h1>
+        <p>Current Score: {score}</p>
+      </div>
       {!gameStarted && (
-        <button className="start-button" onClick={() => setGameStarted(true)}>
+        <button className="start-button" onClick={startGame}>
           Start Game
         </button>
       )}
@@ -222,7 +222,7 @@ function BikeGame() {
         <div>
           <div id="game-board" ref={gameBoardRef}></div>
           <div id="top-bar">Score: {score} - Use W A S D to move</div>
-          <button className="start-button" onClick={() => setGameStarted(false)}>
+          <button className="start-button" onClick={endGame}>
             Restart Game
           </button>
         </div>

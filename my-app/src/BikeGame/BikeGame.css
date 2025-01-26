@@ -5,84 +5,98 @@ body {
     align-items: center;
     height: 100vh;
     background-color: #484848;
-}
-
-.game-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#game-board {
-    position: relative;
+  }
+  
+  .game-wrapper {
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  
+  #game-board {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr); /* Adjusted to fit the Bike Game's grid */
+    grid-template-rows: repeat(12, 1fr); /* Adjusted to fit the Bike Game's grid */
     width: 480px;
-    height: 525px;
+    height: 480px;
+    background-size: cover;
+    position: relative;
+    gap: 2px;
+    margin: 20px auto; /* Center the board and add spacing from other elements */
     background-color: #d6d6d6;
     border: 2px solid black;
-    margin-bottom: 10px; /* Space between game board and score bar */
-}
-
-.square {
+  }
+  
+  .square {
     position: absolute;
     width: 40px;
     height: 40px;
-}
-
-#top-bar {
-    width: 480px; /* Match the width of the game board */
+  }
+  
+  #top-bar {
+    width: 480px;
     height: 45px;
     background-color: #484848;
     color: #d6d6d6;
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 24px;
+    font-family: Arial, sans-serif;
+    font-size: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     border: 2px solid black;
     border-radius: 5px;
-    margin-bottom: 10px; /* Space between the score bar and the buttons */
-}
-
-.start-button {
-    width: 200px;
+    margin: 10px auto; /* Center and add spacing */
+  }
+  
+  .start-button,
+  .restart-button {
     padding: 10px 20px;
     font-size: 18px;
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: Arial, sans-serif;
     color: #fff;
     background-color: #007bff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-top: 10px; /* Add some space between the button and the previous element */
-}
-
-.start-button:hover {
+    margin-top: 20px; /* Add consistent spacing from other elements */
+    display: inline-block;
+  }
+  
+  .start-button:hover,
+  .restart-button:hover {
     background-color: #0056b3;
-    transform: scale(1.05); /* Slight zoom effect on hover */
-}
-
-.start-button:active {
+  }
+  
+  .start-button:active,
+  .restart-button:active {
     background-color: #003f7f;
-    transform: scale(1); /* Reset zoom effect on active click */
-}
-
-.game-header {
+    transform: scale(0.98); /* Slightly shrink the button on click */
+  }
+  
+  .start-button {
+    margin: 20px auto; /* Center horizontally */
+  }
+  
+  .restart-button {
+    margin: 20px auto; /* Center horizontally */
+  }
+  
+  .game-header {
     text-align: center;
     font-family: Arial, sans-serif;
     margin-bottom: 20px;
   }
   
   .game-header h1 {
-    font-size: 40px; /* Matches DuckSweeper's title size */
+    font-size: 40px;
     font-weight: bold;
-    color: #333; /* Matches DuckSweeper's color */
-    margin: 0; /* Remove any extra spacing */
+    color: #333;
+    margin: 0;
   }
   
   .game-header p {
-    font-size: 20px; /* Matches DuckSweeper's subheading size */
-    color: #666; /* Subtle color for the score or timer */
-    margin-top: 5px; /* Add a small margin below the title */
+    font-size: 20px;
+    color: #666;
+    margin-top: 5px;
   }
   

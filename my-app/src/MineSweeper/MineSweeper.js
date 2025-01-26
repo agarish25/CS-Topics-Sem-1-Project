@@ -136,37 +136,54 @@ const DuckMinesweeper = () => {
 
   return (
     <div className="minesweeper-container">
-      <h1>DuckSweeper</h1>
-      <div className="timer">Time: {time} seconds</div>
-      <div className="grid">
-        {grid.map((row, rowIndex) =>
-          row.map((cell, colIndex) => (
-            <div
-              key={`${rowIndex}-${colIndex}`}
-              className={`cell ${cell.revealed ? "revealed" : ""} ${
-                cell.flagged ? "flagged" : ""
-              } ${cell.isDuck && cell.revealed ? "duck" : ""}`}
-              onClick={() => revealCell(rowIndex, colIndex)}
-              onContextMenu={(e) => {
-                e.preventDefault();
-                flagCell(rowIndex, colIndex);
-              }}
-            >
-              {cell.revealed
-                ? cell.isDuck
-                  ? "🦆"
-                  : cell.neighborDucks || ""
-                : cell.flagged
-                ? "🚩"
-                : ""}
-            </div>
-          ))
-        )}
-      </div>
-      <div className="button-container">
-        {!gameStarted && <button onClick={initGame}>Start Game</button>}
-        {gameStarted && <button onClick={startNewGame}>Restart Game</button>}
-      </div>
+      {!gameStarted ? (
+        <div className="start-container">
+          <div className="game-header">
+            <h1>DuckSweeper</h1>
+            <p>Time: {time} seconds</p>
+          </div>
+          <button className="start-button" onClick={initGame}>
+            Start Game
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="game-header">
+            <h1>DuckSweeper</h1>
+            <p>Time: {time} seconds</p>
+          </div>
+          <div className="grid">
+            {grid.map((row, rowIndex) =>
+              row.map((cell, colIndex) => (
+                <div
+                  key={`${rowIndex}-${colIndex}`}
+                  className={`cell ${cell.revealed ? "revealed" : ""} ${
+                    cell.flagged ? "flagged" : ""
+                  } ${cell.isDuck && cell.revealed ? "duck" : ""}`}
+                  onClick={() => revealCell(rowIndex, colIndex)}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    flagCell(rowIndex, colIndex);
+                  }}
+                >
+                  {cell.revealed
+                    ? cell.isDuck
+                      ? "🦆"
+                      : cell.neighborDucks || ""
+                    : cell.flagged
+                    ? "🚩"
+                    : ""}
+                </div>
+              ))
+            )}
+          </div>
+          <div className="button-container">
+            <button className="restart-button" onClick={startNewGame}>
+              Restart Game
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
