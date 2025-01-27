@@ -135,21 +135,14 @@ const DuckMinesweeper = () => {
       setGameOver(true);
       clearInterval(intervalRef.current);
 
-      // Update high score if it's a new record
-      if (highScore === null || time < highScore) {
-        setHighScore(time);
-        updateHighScore(time); // Save the high score
-      }
+      updateHighScore("DuckSweeper", time);
 
       alert(`Congratulations! You won DuckSweeper in ${time} seconds!`);
     } else if (revealedCells === totalCells - numDucks) {
       setGameOver(true);
       clearInterval(intervalRef.current);
 
-      if (highScore === null || time < highScore) {
-        setHighScore(time);
-        updateHighScore(time);
-      }
+      updateHighScore("DuckSweeper", time);
 
       alert(`Congratulations! You won Duck Sweeper in ${time} seconds!`);
     }
