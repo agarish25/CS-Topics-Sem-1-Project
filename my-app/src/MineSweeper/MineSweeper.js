@@ -151,7 +151,7 @@ const DuckMinesweeper = () => {
         updateHighScore(time);
       }
 
-      alert(`Congratulations! You won DuckSweeper in ${time} seconds!`);
+      alert(`Congratulations! You won Duck Sweeper in ${time} seconds!`);
     }
   };
 
@@ -159,7 +159,7 @@ const DuckMinesweeper = () => {
     <div className="minesweeper-container">
       {!gameStarted ? (
         <div className="start-container">
-          <h1>DuckSweeper</h1>
+          <h1>Duck Sweeper</h1>
           <p>Time: {time} seconds</p>
           {highScore !== null && <p>Best Time: {highScore} seconds</p>}
           <button className="start-button" onClick={initGame}>
