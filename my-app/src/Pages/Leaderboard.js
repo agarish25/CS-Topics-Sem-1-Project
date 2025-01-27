@@ -24,12 +24,12 @@ const Leaderboard = () => {
                         <th>{highScores.BikeGame} Ducks</th>
                     </tr>
                     <tr>
-                        <th>DuckSweeper</th>
+                        <th>Duck Sweeper</th>
                         <th>{highScores.DuckSweeper} Seconds</th>
                     </tr>
                     <tr>
                         <th>Word Duck</th>
-                        <th>{highScores.WordDuck} Seconds</th>
+                        <th>{highScores.WordDuck} Points</th>
                     </tr>
                 </tbody>
             </Table>

@@ -23,6 +23,11 @@ const WordHuntGame = () => {
   const [gameStarted, setGameStarted] = useState(false); // Track whether the game has started
   const lineCanvasRef = useRef();
   const duckRef = useRef();
+  const scoreRef = useRef(0);
+
+  useEffect(() => {
+    scoreRef.current = score;
+  }, [score]);
 
   useEffect(() => {
     if (gameStarted) {
@@ -34,6 +39,7 @@ const WordHuntGame = () => {
         setTimeLeft((prev) => {
           if (prev > 0) return prev - 1;
           setGameOver(true);
+          updateHighScore("WordDuck", scoreRef.current);
           clearInterval(timer);
           return 0;
         });
