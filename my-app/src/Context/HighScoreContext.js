@@ -24,7 +24,7 @@ export const HighScoreProvider = ({ children }) => {
         console.log(`Updating high score for ${game}. Current score: ${newScore}`);
         setHighScores((prevScores) => {
             let operator = Math.max;
-            if (game == "DuckSweeper" && prevScores[game] != 0){
+            if (game === "DuckSweeper" && prevScores[game] !== 0){
                 operator = Math.min;
             };
 
@@ -41,15 +41,15 @@ export const HighScoreProvider = ({ children }) => {
     const resetHighScores = () => {
         const resetScores = {
             BikeGame: 0,
-            DuckSweeker: 0,
-            DuckHunt: 0,
+            DuckSweeper: 0,
+            WordDuck: 0,
         };
-        localStorage.setItem("highScores", JSON.Stringify(resetScores));
+        localStorage.setItem("highScores", JSON.stringify(resetScores));
         setHighScores(resetScores);
     };
 
     return (
-        <HighScoreContext.Provider value={{ highScores, updateHighScore }}>
+        <HighScoreContext.Provider value={{ highScores, updateHighScore, resetHighScores }}>
             {children}
         </HighScoreContext.Provider>
     );

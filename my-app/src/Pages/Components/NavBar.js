@@ -17,7 +17,7 @@ const TopNavBar = () => {
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
                                 <Dropdown.Item href="/bikegamepage">Bike Game</Dropdown.Item>
-                                <Dropdown.Item href="/ducksweeperpage">MineSweeper</Dropdown.Item>
+                                <Dropdown.Item href="/ducksweeperpage">Duck Sweeper</Dropdown.Item>
                                 <Dropdown.Item href="wordduckpage">Word Duck</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>

@@ -169,7 +169,7 @@ const DuckMinesweeper = () => {
       ) : (
         <>
           <div className="game-header">
-            <h1>DuckSweeper</h1>
+            <h1>Duck Sweeper</h1>
             <p>Time: {time} seconds</p>
             {highScore !== null && <p>Best Time: {highScore} seconds</p>}
           </div>
