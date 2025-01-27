@@ -22,7 +22,7 @@ function BikeGame() {
   const gameInstanceRef = useRef(null); // Reference for the game instance
 
   const endGame = () => {
-    alert(`Game Over!`);
+    alert(`Game Over with score of ${scoreRef.current}`);
     updateHighScore("BikeGame", scoreRef.current);
     setGameStarted(false);
     setScore(0); // Reset state score
@@ -186,7 +186,11 @@ function BikeGame() {
             if (this.player.x === duck.x && this.player.y === duck.y) {
               this.ducks.splice(i, 1);
               duck.element.remove();
-              this.updateScore((prev) => prev + 1);
+
+              const newScore = scoreRef.current + 1;
+              this.updateScore(newScore);
+              scoreRef.current = newScore;
+
               this.spawnDuck();
             }
           }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, {  useContext } from "react";
 import { Link, BrowserRouter } from "react-router-dom";
 import { Container, Table, Button } from "react-bootstrap";
 import { HighScoreContext } from "../Context/HighScoreContext";
