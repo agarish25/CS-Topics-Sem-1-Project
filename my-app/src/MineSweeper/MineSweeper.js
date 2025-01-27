@@ -1,32 +1,39 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { HighScoreContext } from "../Context/HighScoreContext";
-import "./MineSweeper.css"; // Place all styles in this CSS file
+import "./MineSweeper.css";
 
 const DuckMinesweeper = () => {
   const { updateHighScore } = useContext(HighScoreContext);
 
-  const onGameEnd = (score) => {
-    console.log(`updating DuckSweeper records with time of ${score}`);
-    updateHighScore("DuckSweeper", score);
-  }
-
   const rows = 10;
   const cols = 10;
   const numDucks = 10;
+
   const [grid, setGrid] = useState([]);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [time, setTime] = useState(0);
   const [flags, setFlags] = useState(0);
   const [revealedCells, setRevealedCells] = useState(0);
-  const [intervalId, setIntervalId] = useState(null);
+  const [highScore, setHighScore] = useState(null); // Track high score
+
+  const intervalRef = useRef(null); // Store the interval ID
 
   useEffect(() => {
     if (gameStarted && !gameOver) {
-      const timer = setInterval(() => setTime((prevTime) => prevTime + 1), 1000);
-      setIntervalId(timer);
+      // Start the interval
+      intervalRef.current = setInterval(() => {
+        setTime((prevTime) => prevTime + 1);
+      }, 1000);
+
+      // Cleanup interval on unmount or game end
+      return () => clearInterval(intervalRef.current);
     }
-    return () => clearInterval(intervalId);
+
+    // Clear interval when the game ends
+    if (gameOver) {
+      clearInterval(intervalRef.current);
+    }
   }, [gameStarted, gameOver]);
 
   const initGame = () => {
@@ -67,6 +74,7 @@ const DuckMinesweeper = () => {
 
   const startNewGame = () => {
     setGameStarted(false);
+    clearInterval(intervalRef.current); // Clear the interval
     initGame();
   };
 
@@ -79,7 +87,7 @@ const DuckMinesweeper = () => {
 
     if (newGrid[row][col].isDuck) {
       setGameOver(true);
-      clearInterval(intervalId);
+      clearInterval(intervalRef.current); // Stop the timer
       revealAllDucks(newGrid);
       alert("You hit a duck! Game Over!");
     } else if (newGrid[row][col].neighborDucks === 0) {
@@ -101,7 +109,9 @@ const DuckMinesweeper = () => {
 
     const newGrid = [...grid];
     newGrid[row][col].flagged = !newGrid[row][col].flagged;
-    setFlags((prevFlags) => (newGrid[row][col].flagged ? prevFlags + 1 : prevFlags - 1));
+    setFlags((prevFlags) =>
+      newGrid[row][col].flagged ? prevFlags + 1 : prevFlags - 1
+    );
     checkWin(newGrid);
     setGrid(newGrid);
   };
@@ -123,14 +133,25 @@ const DuckMinesweeper = () => {
 
     if (allDucksFlagged && flags === numDucks) {
       setGameOver(true);
-      clearInterval(intervalId);
+      clearInterval(intervalRef.current);
+
+      // Update high score if it's a new record
+      if (highScore === null || time < highScore) {
+        setHighScore(time);
+        updateHighScore(time); // Save the high score
+      }
+
       alert(`Congratulations! You won DuckSweeper in ${time} seconds!`);
-      onGameEnd(time);
     } else if (revealedCells === totalCells - numDucks) {
       setGameOver(true);
-      clearInterval(intervalId);
+      clearInterval(intervalRef.current);
+
+      if (highScore === null || time < highScore) {
+        setHighScore(time);
+        updateHighScore(time);
+      }
+
       alert(`Congratulations! You won DuckSweeper in ${time} seconds!`);
-      onGameEnd(time);
     }
   };
 
@@ -138,10 +159,9 @@ const DuckMinesweeper = () => {
     <div className="minesweeper-container">
       {!gameStarted ? (
         <div className="start-container">
-          <div className="game-header">
-            <h1>DuckSweeper</h1>
-            <p>Time: {time} seconds</p>
-          </div>
+          <h1>DuckSweeper</h1>
+          <p>Time: {time} seconds</p>
+          {highScore !== null && <p>Best Time: {highScore} seconds</p>}
           <button className="start-button" onClick={initGame}>
             Start Game
           </button>
@@ -151,6 +171,7 @@ const DuckMinesweeper = () => {
           <div className="game-header">
             <h1>DuckSweeper</h1>
             <p>Time: {time} seconds</p>
+            {highScore !== null && <p>Best Time: {highScore} seconds</p>}
           </div>
           <div className="grid">
             {grid.map((row, rowIndex) =>

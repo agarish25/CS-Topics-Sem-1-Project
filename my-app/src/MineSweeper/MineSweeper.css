@@ -1,58 +1,17 @@
-.minesweeper-container {
+.minesweeper-container, .start-container {
   text-align: center;
   font-family: Arial, sans-serif;
-}
-
-.game-header {
-  text-align: center;
-  font-family: Arial, sans-serif;
-  margin-bottom: 20px; /* Consistent spacing below the header */
-}
-
-.game-header h1 {
-  font-size: 40px; /* Matches Word Hunt title size */
-  font-weight: bold;
-  color: #333; /* Consistent text color */
-  margin: 0;
-}
-
-.game-header p {
-  font-size: 20px; /* Matches Word Hunt subheading size */
-  color: #666; /* Subtle color for subheading */
-  margin-top: 5px; /* Matches Word Hunt spacing */
-}
-
-.start-button {
-  padding: 10px 20px;
-  font-size: 18px;
-  font-family: Arial, sans-serif;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin-top: 20px; /* Matches Word Hunt spacing */
-}
-
-.start-button:hover {
-  background-color: #0056b3;
-}
-
-.start-button:active {
-  background-color: #003f7f;
-  transform: scale(0.98); /* Slight shrink effect */
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
-  width: 400px;
-  height: 400px;
+  width: 450px;
+  height: 450px;
   background-size: cover;
   position: relative;
-  gap: 2px;
+  gap: 4px;
   margin: 0 auto;
 }
 
@@ -62,19 +21,78 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
-  border: 1px solid #ddd;
-  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  background-color: #e0e0e0; /* Gray for unselected cells */
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .cell:hover {
-  background-color: #e0e0e0;
+  background-color: #d6d6d6; /* Lighter gray on hover */
 }
 
-.game-over {
-  font-size: 24px;
-  color: red;
+.cell.revealed {
+  background-color: #d4f7d4; /* Light green for revealed cells */
+  color: #333; /* Dark text for numbers */
+}
+
+.cell.revealed.duck {
+  background-color: #f9d6d6; /* Light red for cells with a duck */
+}
+
+.cell.flagged {
+  background-color: #fff4cc; /* Light yellow for flagged cells */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cell.flagged::after {
+  /* content: "🚩"; /* Flag icon */
+  font-size: 18px;
+}
+
+.start-button,
+.restart-button {
+  padding: 10px 20px;
+  font-size: 18px;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   margin-top: 20px;
+}
+
+.start-button:hover,
+.restart-button:hover {
+  background-color: #0056b3;
+}
+
+.start-button:active,
+.restart-button:active {
+  background-color: #003f7f;
+  transform: scale(0.98);
+}
+
+.start-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.start-container h1 {
+  font-size: 40px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.start-container p {
+  font-size: 20px;
+  color: #666;
+  margin-top: 5px;
 }
