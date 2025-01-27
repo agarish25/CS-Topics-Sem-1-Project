@@ -24,7 +24,7 @@ export const HighScoreProvider = ({ children }) => {
         console.log(`Updating high score for ${game}. Current score: ${newScore}`);
         setHighScores((prevScores) => {
             let operator = Math.max;
-            if (game == "DuckSweeper" && prevScores != 0){
+            if (game == "DuckSweeper" && prevScores[game] != 0){
                 operator = Math.min;
             };
 
@@ -36,6 +36,16 @@ export const HighScoreProvider = ({ children }) => {
             localStorage.setItem("highScores", JSON.stringify(updatedScores));
             return updatedScores;
         });
+    };
+
+    const resetHighScores = () => {
+        const resetScores = {
+            BikeGame: 0,
+            DuckSweeker: 0,
+            DuckHunt: 0,
+        };
+        localStorage.setItem("highScores", JSON.Stringify(resetScores));
+        setHighScores(resetScores);
     };
 
     return (

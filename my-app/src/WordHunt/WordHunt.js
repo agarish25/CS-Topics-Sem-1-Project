@@ -206,7 +206,7 @@ const WordHuntGame = () => {
   return (
     <div className="wordhunt-container" onMouseUp={handleMouseUp}>
       <div className="game-header">
-            <h1>Word Hunt</h1>
+            <h1>Word Duck</h1>
             <p>Current Score: 0</p>
         </div>
       {!gameStarted ? (

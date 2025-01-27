@@ -6,7 +6,7 @@ import { HighScoreContext } from "../Context/HighScoreContext";
 
 const Leaderboard = () => {
     // initializes high scores to 0 for each game
-    const { highScores, updateHighScore } = useContext(HighScoreContext);
+    const { highScores, resetHighScores } = useContext(HighScoreContext);
 
     return (
         <Container>
@@ -35,12 +35,7 @@ const Leaderboard = () => {
             </Table>
 
             <Button variant="danger"
-                onClick = {() => {
-                    localStorage.removeItem("highScores");
-                    updateHighScore("BikeGame", 0);
-                    updateHighScore("DuckSweeper", 0);
-                    updateHighScore("WordDuck", 0);
-                }}
+                onClick = { resetHighScores }
             >
                 RESET HIGH SCORES
             </Button>
