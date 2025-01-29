@@ -1,3 +1,10 @@
+/*
+    Ishaan Agarwal
+    1/28/2025
+
+    About.js is the about page for the application, providing information about each game and the genearl purpose of the site.
+*/
+
 import React from "react";
 import { Link, BrowserRouter } from "react-router-dom";
 import { Container, Row, Col, Button, Card, Image } from "react-bootstrap";

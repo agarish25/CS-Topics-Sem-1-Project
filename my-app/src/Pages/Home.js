@@ -1,3 +1,11 @@
+/*
+    Ishaan Agarwal
+    1/28/2025
+
+    Home.js is the main page of the application, displaying a welcome message and a list of games with their descriptions and links to play them.
+    The page employs React-Bootstrap and iterates through the games list to dynamically display game thumbnails, descriptions, and links to their respective game pages.
+*/
+
 import React, { useState } from "react";
 import TopNavBar from "./Components/NavBar";
 import { Link, BrowserRouter } from "react-router-dom";

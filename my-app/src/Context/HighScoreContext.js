@@ -1,3 +1,11 @@
+/*
+    Ishaan Agarwal
+    1/28/2025
+
+    HighScoreContext.js manages high scores for Game Ducky, storing and updating them in localStorage.
+    It supports per-game score tracking, with special logic for DuckSweeper (lower is better).
+*/
+
 import React, { createContext, useState, useEffect } from "react";
 
 // Create the context
