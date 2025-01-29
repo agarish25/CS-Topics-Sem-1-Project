@@ -1,3 +1,10 @@
+/*
+    Matthew Fischer
+    1/28/2025
+
+    MineSweeper.css is the styling for MineSweeper.js.
+*/
+
 .minesweeper-container, .start-container {
   text-align: center;
   font-family: Arial, sans-serif;

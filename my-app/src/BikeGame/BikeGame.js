@@ -7,6 +7,7 @@
     The player must also collect ducks to increase their score. This game is converted from BikeGame.java
     using a TeaVM compiler.
 */
+
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { HighScoreContext } from "../Context/HighScoreContext";
 import "./BikeGame.css";
@@ -231,6 +232,7 @@ function BikeGame() {
     };
   }, [gameStarted]);
 
+  // render the game
   return (
     <div className="game-wrapper">
       <div className="game-header">
