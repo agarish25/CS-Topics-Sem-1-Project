@@ -4,24 +4,37 @@ plugins {
     id "org.teavm" version "0.11.0"
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.fork = true
+    options.forkOptions.executable = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(11)
+    }.get().executablePath.asFile.absolutePath
+}
+
 // This is optional, but for real-world applications you need to interact with browser.
 // This dependency provides useful wrappers.
 dependencies {
     implementation teavm.libs.jsoApis
-    implementation files('libs\teavm-jso-apis-0.11.0-dev-3-sources.jar')
+    implementation files('libs\teavm-jso-apis-0.11.0-dev-3-sources.jar') // Add the sources for the JSO APIs
 
 }
 
 repositories {
     mavenCentral()
     maven {
-        url "https://teavm.org/maven/repository"
+        url "https://teavm.org/maven/repository" // Add TeaVM repository
     }
 }
 
 teavm {
     all {
-        mainClass = "BikeGame.TestBike"
+        mainClass = "BikeGame.java" // The main class of the application
     }
     js {
         addedToWebApp = false // Prevent it from being placed in webapp
