@@ -46,6 +46,7 @@ export const HighScoreProvider = ({ children }) => {
         });
     };
 
+    // resets high scores
     const resetHighScores = () => {
         const resetScores = {
             BikeGame: 0,
@@ -56,6 +57,7 @@ export const HighScoreProvider = ({ children }) => {
         setHighScores(resetScores);
     };
 
+    // return statement
     return (
         <HighScoreContext.Provider value={{ highScores, updateHighScore, resetHighScores }}>
             {children}
