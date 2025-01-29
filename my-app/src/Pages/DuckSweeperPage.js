@@ -12,7 +12,7 @@ import DuckSweeper from "../MineSweeper/MineSweeper";
 
 
 const DuckSweeperPage = () => {
-
+    {/* DuckSweeper page text and elements */}
     return (
         <>
             <DuckSweeper />

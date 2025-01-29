@@ -12,7 +12,7 @@ import gameDuckyLogo from "../Game Ducky.png";
 
 
 const About = () => {
-
+    {/* About page text and elements */}
     return (
         <Container className="text-center py-5">
             <Row className="justify-content-center mb-4">
@@ -26,6 +26,7 @@ const About = () => {
                 Welcome to the world of Game Ducky, where fun meets creativity and every moment is filled with excitement! Whether you're hunting for words, uncovering hidden ducks, or riding alongside a growing duck train, our collection of Ducky-themed games offers something for everyone.
             </p>
             
+            {/* Bike Game text */}
             <Row className="gy-4">
                 <Col md={4}>
                     <Card className="h-100">
@@ -37,9 +38,8 @@ const About = () => {
                         </Card.Body>
                     </Card>
                 </Col>
-               
-                
 
+                {/* Duck Sweeper text */}
                 <Col md={4}>
                 <Card className="h-100">
                     <Card.Body>
@@ -51,6 +51,7 @@ const About = () => {
                 </Card>
                 </Col>
 
+                {/* Word Duck text */}
                 <Col md={4}>
                 <Card className="h-100">
                     <Card.Body>

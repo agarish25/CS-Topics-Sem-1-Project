@@ -24,7 +24,7 @@ const games = [
 
 
 const Home = () => {
-
+    {/* Home page text and elements */}
     return (
         <>
             
@@ -36,7 +36,8 @@ const Home = () => {
                 </Col>
                 </Row>
             </Container>
-            
+
+            {/* Game page thumbnails */}
             <Row className="g-4">
                 {games.map((game) => (
                     <>

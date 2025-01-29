@@ -12,7 +12,7 @@ import BikeGame from "../BikeGame/BikeGame";
 
 
 const BikeGamePage = () => {
-
+    {/* BikeGame page text and elements */}
     return (
         <div>
             <BikeGame />
