@@ -57,9 +57,9 @@ const About = () => {
                 
             </Row>
 
-            <h2 className="mt-5">Why Game Duck?</h2>
+            <h2 className="mt-5">Why Game Ducky?</h2>
             <p className="lead">
-                At Game Duck, our goal is to deliver fun experiences with a bit of rigor. Our games are designed to challenge your brain, encourage creativity, and offer endless replayability for all ages.
+                At Game Ducky, our goal is to deliver fun experiences with a bit of rigor. Our games are designed to challenge your brain, encourage creativity, and offer endless replayability for all ages.
             </p>
         </Container>
     )
