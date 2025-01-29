@@ -4,7 +4,7 @@
 
     App.js is the central launching page for the Game Ducky website. It embeds the TopNavBar 
     component and uses the Routes and Route components to navigate between pages. The website
-    also includes all the games
+    also includes all the games.
 */
 
 import React, { useState } from "react";
