@@ -17,8 +17,6 @@ tasks.withType(JavaCompile) {
     }.get().executablePath.asFile.absolutePath
 }
 
-// This is optional, but for real-world applications you need to interact with browser.
-// This dependency provides useful wrappers.
 dependencies {
     implementation teavm.libs.jsoApis
     implementation files('libs\teavm-jso-apis-0.11.0-dev-3-sources.jar') // Add the sources for the JSO APIs

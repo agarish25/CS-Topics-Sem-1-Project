@@ -14,37 +14,38 @@ import "./MineSweeper.css";
 const DuckMinesweeper = () => {
   const { updateHighScore } = useContext(HighScoreContext);
 
+  // basic game setup stuff
   const rows = 10;
   const cols = 10;
   const numDucks = 10;
 
+  // keeping track of game states and scores
   const [grid, setGrid] = useState([]);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [time, setTime] = useState(0);
   const [flags, setFlags] = useState(0);
   const [revealedCells, setRevealedCells] = useState(0);
-  const [highScore, setHighScore] = useState(null); // Track high score
+  const [highScore, setHighScore] = useState(null); // track high score
 
-  const intervalRef = useRef(null); // Store the interval ID
+  const intervalRef = useRef(null); // stores the interval ID for the timer
 
+  // timer logic for when the game is running
   useEffect(() => {
     if (gameStarted && !gameOver) {
-      // Start the interval
       intervalRef.current = setInterval(() => {
         setTime((prevTime) => prevTime + 1);
       }, 1000);
 
-      // Cleanup interval on unmount or game end
-      return () => clearInterval(intervalRef.current);
+      return () => clearInterval(intervalRef.current); // clean up
     }
 
-    // Clear interval when the game ends
     if (gameOver) {
-      clearInterval(intervalRef.current);
+      clearInterval(intervalRef.current); // stop timer when game ends
     }
   }, [gameStarted, gameOver]);
 
+  // initialize the grid and place ducks
   const initGame = () => {
     setTime(0);
     setGameOver(false);
@@ -61,6 +62,7 @@ const DuckMinesweeper = () => {
       }))
     );
 
+    // placing ducks randomly
     let placedDucks = 0;
     while (placedDucks < numDucks) {
       const row = Math.floor(Math.random() * rows);
@@ -69,6 +71,7 @@ const DuckMinesweeper = () => {
         newGrid[row][col].isDuck = true;
         placedDucks++;
 
+        // update neighboring cell counts
         for (let r = row - 1; r <= row + 1; r++) {
           for (let c = col - 1; c <= col + 1; c++) {
             if (r >= 0 && r < rows && c >= 0 && c < cols) {
@@ -81,12 +84,14 @@ const DuckMinesweeper = () => {
     setGrid(newGrid);
   };
 
+  // starts a new game
   const startNewGame = () => {
     setGameStarted(false);
-    clearInterval(intervalRef.current); // Clear the interval
+    clearInterval(intervalRef.current); // reset timer
     initGame();
   };
 
+  // reveal a cell and check for ducks
   const revealCell = (row, col) => {
     if (grid[row][col].revealed || grid[row][col].flagged || gameOver) return;
 
@@ -94,12 +99,14 @@ const DuckMinesweeper = () => {
     newGrid[row][col].revealed = true;
     setRevealedCells((prev) => prev + 1);
 
+    // if you hit a duck, end the game
     if (newGrid[row][col].isDuck) {
       setGameOver(true);
-      clearInterval(intervalRef.current); // Stop the timer
+      clearInterval(intervalRef.current); // stop the timer
       revealAllDucks(newGrid);
       alert("You hit a duck! Game Over!");
     } else if (newGrid[row][col].neighborDucks === 0) {
+      // reveal neighboring cells if the current one is safe
       for (let r = row - 1; r <= row + 1; r++) {
         for (let c = col - 1; c <= col + 1; c++) {
           if (r >= 0 && r < rows && c >= 0 && c < cols && !newGrid[r][c].revealed) {
@@ -113,6 +120,7 @@ const DuckMinesweeper = () => {
     setGrid(newGrid);
   };
 
+  // flag a cell
   const flagCell = (row, col) => {
     if (grid[row][col].revealed || gameOver) return;
 
@@ -125,6 +133,7 @@ const DuckMinesweeper = () => {
     setGrid(newGrid);
   };
 
+  // reveal all ducks at the end of the game
   const revealAllDucks = (newGrid) => {
     newGrid.forEach((row) => {
       row.forEach((cell) => {
@@ -134,6 +143,7 @@ const DuckMinesweeper = () => {
     setGrid(newGrid);
   };
 
+  // check if the player has won
   const checkWin = (newGrid) => {
     const totalCells = rows * cols;
     const allDucksFlagged = newGrid.every((row) =>
@@ -146,7 +156,7 @@ const DuckMinesweeper = () => {
 
       updateHighScore("DuckSweeper", time);
 
-      alert(`Congratulations! You won DuckSweeper in ${time} seconds!`);
+      alert(`Congratulations! You won Duck Sweeper in ${time} seconds!`);
     } else if (revealedCells === totalCells - numDucks) {
       setGameOver(true);
       clearInterval(intervalRef.current);

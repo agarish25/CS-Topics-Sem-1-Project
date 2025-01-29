@@ -25,26 +25,28 @@ function BikeGame() {
   const { updateHighScore } = useContext(HighScoreContext);
 
   const gameBoardRef = useRef(null);
-  const scoreRef = useRef(0); // Ref to track the score in real-time
+  const scoreRef = useRef(0); // keeps track of score in real-time
   const [score, setScore] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
-  const gameInstanceRef = useRef(null); // Reference for the game instance
+  const gameInstanceRef = useRef(null); // stores the game instance
 
+  // function to handle game over
   const endGame = () => {
     alert(`Game Over with score of ${scoreRef.current}`);
     updateHighScore("BikeGame", scoreRef.current);
     setGameStarted(false);
-    setScore(0); // Reset state score
-    scoreRef.current = 0; // Reset the ref
+    setScore(0); // reset state score
+    scoreRef.current = 0; // reset ref score
     if (gameInstanceRef.current) {
-      clearInterval(gameInstanceRef.current.gameInterval); // Clear any running intervals
-      gameInstanceRef.current = null; // Reset the game instance
+      clearInterval(gameInstanceRef.current.gameInterval); // stop any running game loop
+      gameInstanceRef.current = null; // reset game instance
     }
   };
 
+  // function to start the game
   const startGame = () => {
-    setScore(0); // Reset state score
-    scoreRef.current = 0; // Reset the score ref
+    setScore(0);
+    scoreRef.current = 0;
     setGameStarted(true);
   };
 
@@ -56,8 +58,8 @@ function BikeGame() {
           this.updateScore = updateScore;
           this.endGameCallback = endGameCallback;
 
-          this.numSquares = 12;
-          this.squareSize = 40;
+          this.numSquares = 12; // grid size
+          this.squareSize = 40; // size of each cell
           this.duckIconSize = 35;
           this.player = { x: 5, y: 5, direction: "up", element: null };
           this.ducks = [];
@@ -81,6 +83,7 @@ function BikeGame() {
           this.init();
         }
 
+        // initialize the game
         init() {
           this.createGrid();
           this.spawnDuck();
@@ -89,8 +92,9 @@ function BikeGame() {
           document.addEventListener("keydown", (e) => this.handleKeyPress(e));
         }
 
+        // create the game board/grid
         createGrid() {
-          this.gameBoard.innerHTML = ""; // Clear previous game grid
+          this.gameBoard.innerHTML = ""; // clear previous game board
           this.gameBoard.style.position = "relative";
           this.gameBoard.style.width = `${this.numSquares * this.squareSize}px`;
           this.gameBoard.style.height = `${this.numSquares * this.squareSize}px`;
@@ -114,6 +118,7 @@ function BikeGame() {
           }
         }
 
+        // handle movement inputs
         handleKeyPress(event) {
           const key = event.key.toLowerCase();
           if (["w", "a", "s", "d"].includes(key)) {
@@ -124,6 +129,7 @@ function BikeGame() {
           }
         }
 
+        // start the game loop
         startGameLoop() {
           this.gameInterval = setInterval(() => {
             this.movePlayer();
@@ -132,12 +138,14 @@ function BikeGame() {
           }, 250);
         }
 
+        // move player based on direction
         movePlayer() {
           if (this.player.direction === "up") this.player.y--;
           else if (this.player.direction === "down") this.player.y++;
           else if (this.player.direction === "left") this.player.x--;
           else if (this.player.direction === "right") this.player.x++;
 
+          // check if player hits the wall
           if (
             this.player.x < 0 ||
             this.player.y < 0 ||
@@ -149,6 +157,7 @@ function BikeGame() {
           }
         }
 
+        // render player on the board
         renderPlayer() {
           const playerImage = this.images.bike[this.player.direction];
 
@@ -168,6 +177,7 @@ function BikeGame() {
           this.player.element = playerElement;
         }
 
+        // spawn a duck at a random location
         spawnDuck() {
           let duck;
           do {
@@ -189,6 +199,7 @@ function BikeGame() {
           this.gameBoard.appendChild(duckElement);
         }
 
+        // check for collisions with ducks
         checkCollisions() {
           for (let i = this.ducks.length - 1; i >= 0; i--) {
             const duck = this.ducks[i];
@@ -226,18 +237,11 @@ function BikeGame() {
         <h1>Bike Game</h1>
         <p>Current Score: {score}</p>
       </div>
-      {!gameStarted && (
-        <button className="start-button" onClick={startGame}>
-          Start Game
-        </button>
-      )}
+      {!gameStarted && <button className="start-button" onClick={startGame}>Start Game</button>}
       {gameStarted && (
         <div>
           <div id="game-board" ref={gameBoardRef}></div>
-          <div id="top-bar">Score: {score} - Use W A S D to move</div>
-          <button className="start-button" onClick={endGame}>
-            Restart Game
-          </button>
+          <button className="start-button" onClick={endGame}>Restart Game</button>
         </div>
       )}
     </div>
