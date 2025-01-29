@@ -10,7 +10,7 @@ const About = () => {
         <Container className="text-center py-5">
             <Row className="justify-content-center mb-4">
                 <Col md={6}>
-                <Image src={gameDuckyLogo} alt="Game Ducky Logo" fluid roundedCircle />
+                <Image src={gameDuckyLogo} alt="Game Ducky Logo"  fluid style={{ maxWidth: "300px", paddingTop: "20px" }} />
                 </Col>
             </Row>
             
