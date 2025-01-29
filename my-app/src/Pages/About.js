@@ -10,7 +10,7 @@ const About = () => {
         <Container className="text-center py-5">
             <Row className="justify-content-center mb-4">
                 <Col md={6}>
-                <Image src={gameDuckyLogo} alt="Game Ducky Logo" fluid roundedCircle />
+                <Image src={gameDuckyLogo} alt="Game Ducky Logo"  fluid style={{ maxWidth: "300px", paddingTop: "20px" }} />
                 </Col>
             </Row>
             
@@ -47,7 +47,7 @@ const About = () => {
                 <Col md={4}>
                 <Card className="h-100">
                     <Card.Body>
-                    <Card.Title>🦆 Word Ducky</Card.Title>
+                    <Card.Title>🦆 Word Duck</Card.Title>
                     <Card.Text>
                         Challenge your vocabulary skills in this engaging word puzzle game. Navigate a 4x4 grid, connecting letters to form words while your duck mascot follows your every move. Strategy and speed are key!
                     </Card.Text>
